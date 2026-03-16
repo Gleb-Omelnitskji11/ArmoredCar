@@ -1,3 +1,4 @@
+using Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -9,18 +10,12 @@ public class PreloaderInstaller : MonoInstaller<PreloaderInstaller>
     public override void InstallBindings()
     {
         StaticContext.Container.Bind<ConfigProvider>().FromInstance(_configProvider).AsSingle();
+        StaticContext.Container.Bind<IEventBus>().To<EventBus>().AsSingle();
         GoToGame();
-        //BindConfigs();
     }
-    
-    // private void BindConfigs()
-    // {
-    //     DiContainer container = StaticContext.Container;
-    //     container.Bind<UnitsConfig>().FromInstance(_unitConfig).AsSingle();
-    // }
 
     private void GoToGame()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene(Constantns.GameScene);
     }
 }

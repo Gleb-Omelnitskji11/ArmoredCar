@@ -1,3 +1,4 @@
+using GameServices;
 using UnityEngine;
 using Zenject;
 
@@ -13,6 +14,7 @@ public class GroundsController : MonoBehaviour
     private int _additionalGroundIndex = 1;
     private int _currentGroundIndex;
     private float _nextZPoint;
+    private bool _active;
 
     [Inject]
     public void Construct(PlayerCar car)
@@ -22,7 +24,7 @@ public class GroundsController : MonoBehaviour
 
     private void Update()
     {
-        if (LevelProgression.IsPaused) return;
+        if (!_active) return;
 
         if (_car.position.z >= _nextZPoint)
         {
@@ -42,5 +44,9 @@ public class GroundsController : MonoBehaviour
         _currentGroundIndex = 0;
         _additionalGroundIndex = 1;
         _nextZPoint = ZTriggerOffset;
+        OnResume();
     }
+    
+    public void OnPause() => _active = false;
+    public void OnResume() => _active = true;
 }

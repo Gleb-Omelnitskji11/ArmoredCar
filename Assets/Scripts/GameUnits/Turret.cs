@@ -1,5 +1,7 @@
 using System.Collections;
+using GameServices;
 using UnityEngine;
+using Zenject;
 
 public class Turret : ObjectPool
 {
@@ -8,57 +10,55 @@ public class Turret : ObjectPool
     public TurretModel TurretModel { get; private set; }
 
     private BulletModel _currentBulletModel;
-    private IEnumerator _shootingCoroutine;
-    private IEnumerator _rotatingCoroutine;
-    private Camera _camera;
+    private IInputProvider _input;
     private Quaternion _targetRotation = Quaternion.identity;
     private float _carSpeed;
+    private float _shootTimer;
+    private bool _stop = true;
+
+    [Inject]
+    private void Construct(IInputProvider input)
+    {
+        _input = input;
+    }
 
     public void Init(TurretModel model, float carSpeed)
     {
-        _camera = Camera.main;
         TurretModel = model;
         _carSpeed = carSpeed;
         _currentBulletModel = TurretModel.BulletPrefab[0];
         ReturnAll();
         SetPrefab(_currentBulletModel.BulletPrefab.gameObject);
-        _shootingCoroutine = ShootingCoroutine();
-        _rotatingCoroutine = RotateCoroutine();
     }
 
-    public void StartShooting()
+    public void Stop()
     {
-        StartCoroutine(_shootingCoroutine);
-        StartCoroutine(_rotatingCoroutine);
+        _stop = true;
     }
 
-    public void StopShooting()
+    public void Activate()
     {
-        StopCoroutine(_shootingCoroutine);
-        StopCoroutine(_rotatingCoroutine);
-
-        foreach (var obj in AllObjects)
-        {
-            obj.TurnOff();
-        }
+        _stop = false;
     }
 
-    private IEnumerator ShootingCoroutine()
+    private void Update()
     {
-        while (true)
-        {
-            Shot();
-            yield return new WaitForSeconds(TurretModel.FireDelay);
-        }
+        if (_stop)
+            return;
+        
+        HandleRotation();
+        HandleShooting();
     }
 
-    private IEnumerator RotateCoroutine()
+    private void HandleShooting()
     {
-        while (true)
-        {
-            HandleRotation();
-            yield return null;
-        }
+        _shootTimer += Time.deltaTime;
+
+        if (_shootTimer < TurretModel.FireDelay)
+            return;
+
+        Shot();
+        _shootTimer = 0f;
     }
 
     private void Shot()
@@ -73,50 +73,21 @@ public class Turret : ObjectPool
 
     private void HandleRotation()
     {
-        Vector3? targetPoint = GetInputPosition();
+        if (!_input.TryGetInputPosition(out Vector3 targetPoint))
+            return;
 
-        if (targetPoint != null)
-        {
-            Vector3 direction = targetPoint.Value - transform.position;
-            direction.y = 0f;
+        Vector3 direction = targetPoint - transform.position;
+        direction.y = 0;
 
-            if (direction.sqrMagnitude > 0.01f)
-            {
-                _targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(
-                    transform.rotation,
-                    _targetRotation,
-                    TurretModel.RotationSpeed * Time.deltaTime
-                );
-            }
-        }
-    }
+        if (direction.sqrMagnitude < 0.01f)
+            return;
 
-    private Vector3? GetInputPosition()
-    {
-        Vector3 screenPos = Vector3.zero;
+        _targetRotation = Quaternion.LookRotation(direction);
 
-        if (Input.touchCount > 0)
-        {
-            screenPos = Input.GetTouch(0).position;
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            screenPos = Input.mousePosition;
-        }
-        else
-        {
-            return null;
-        }
-
-        Ray ray = _camera.ScreenPointToRay(screenPos);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-
-        if (groundPlane.Raycast(ray, out float enter))
-        {
-            return ray.GetPoint(enter);
-        }
-
-        return null;
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            _targetRotation,
+            TurretModel.RotationSpeed * Time.deltaTime
+        );
     }
 }

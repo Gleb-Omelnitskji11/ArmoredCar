@@ -20,7 +20,7 @@ public class BasicEnemy : Unit, IPooledObject
     
     public virtual void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag(Constantns.Enemy))
         {
             if (other.TryGetComponent<PlayerCar>(out PlayerCar player))
             {
