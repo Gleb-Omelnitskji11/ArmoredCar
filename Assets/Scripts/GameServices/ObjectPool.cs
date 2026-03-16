@@ -13,14 +13,6 @@ public class ObjectPool : MonoBehaviour
     protected IPooledObject _spawnPrefab;
     public void SetPrefab(GameObject prefab) => _spawnPrefab = prefab.GetComponent<IPooledObject>();
 
-    protected void CreateStartObjects()
-    {
-        for (int i = 0; i < initialSize; i++)
-        {
-            CreateNewObject();
-        }
-    }
-
     protected void CreateNewObject()
     {
         var obj = Instantiate(_spawnPrefab.Monobehaviour, _parentObject.transform, true);

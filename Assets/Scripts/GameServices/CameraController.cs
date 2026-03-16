@@ -1,17 +1,19 @@
-using System.Collections;
 using UnityEngine;
+using Zenject;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private bool _follow = true;
-    [SerializeField] private Transform _car;
     [SerializeField] private Transform _cameraTransform;
     [SerializeField] private Vector3 _gamePositionOffSet = new Vector3(0f, 10.13f, -8.14f);
     private Vector3 _currentPosition;
-
-
-    //private const int _zСameraOffset = 5;
-    //private const float _zCameraStart = -51f;
+    private Transform _car;
+    
+    [Inject]
+    public void Construct(PlayerCar playerCar)
+    {
+        _car = playerCar.transform;
+    }
 
     private void LateUpdate()
     {

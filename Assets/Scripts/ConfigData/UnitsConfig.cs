@@ -1,12 +1,15 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/UnitsConfig", order = 0)]
+[CreateAssetMenu(fileName = "UnitsConfig", menuName = "ScriptableObjects/UnitsConfig", order = 0)]
 public class UnitsConfig : ScriptableObject
 {
     [SerializeField] private UnitModel[] _unitModels = new UnitModel[2];
     [SerializeField] private TurretModel[] _turretModels = new TurretModel[1];
     [SerializeField] private int _enemyStartCount;
+    [SerializeField] private LevelModel _defaultLevelModel;
+    
+    public LevelModel GetDefaultLevelModel => _defaultLevelModel;
 
     public UnitModel GetUnitModel(UnitType unitType)
     {

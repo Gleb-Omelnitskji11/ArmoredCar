@@ -82,6 +82,7 @@ MonoBehaviour:
   _currentHp: 0
   _hpBar: {fileID: 6038234621714706153}
   _turret: {fileID: 3542102668480827331}
+  _stop: 0
 --- !u!1 &6399474856033316954
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,10 +108,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6399474856033316954}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.84999996, z: -0.11000061}
-  m_LocalScale: {x: 0.37, y: 0.37, z: 0.37}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: -0, y: -0.01685087, z: -0, w: 0.999858}
+  m_LocalPosition: {x: 0, y: 0.45, z: -1.32}
+  m_LocalScale: {x: 0.39999998, y: 0.39999998, z: 0.39999998}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7746276111189400352}
   - {fileID: 1414222180344063383}

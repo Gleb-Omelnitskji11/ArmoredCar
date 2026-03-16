@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
 using DG.Tweening;
-using DG.Tweening.Core;
-using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
 public class PlayerCar : Unit
@@ -14,12 +11,26 @@ public class PlayerCar : Unit
 
     private Vector3 _carPosition;
     private Tween _tween;
+    
+    //test
+    [SerializeField] private bool _stop;
+    private bool _isMoving = true;
 
-    private void Start()
+    private void Update()
     {
-        //_moveCoroutine = MoveForward();
-    }
+        if (_isMoving && _stop)
+        {
+            _isMoving = false;
+            _tween?.Kill();
+        }
 
+        if (!_isMoving && !_stop)
+        {
+            UpdateDirection();
+            _isMoving = true;
+        }
+    }
+//
     public override void InitUnit(UnitModel model, params object[] additionalPrms)
     {
         base.InitUnit(model);
@@ -29,22 +40,19 @@ public class PlayerCar : Unit
         _hpBar.Init(model.MaxHp);
     }
 
-    public void StartGame()
+    public void StartLevel()
     {
         _tween?.Kill();
-        float newZ = transform.position.z + 9999f;
-        float duration = 9999f / _moveSpeed;
-        _tween = transform.DOMoveZ(newZ, duration)
-            .SetEase(Ease.Linear).OnComplete(MoveStep);
+        UpdateDirection();
         _turret.StartShooting();
     }
 
-    private void MoveStep()
+    private void UpdateDirection()
     {
         float newZ = transform.position.z + 9999f;
         float duration = 9999f / _moveSpeed;
         _tween = transform.DOMoveZ(newZ, duration)
-            .SetEase(Ease.Linear).OnComplete(MoveStep);
+            .SetEase(Ease.Linear).OnComplete(UpdateDirection);
     }
 
     public void OnTriggerEnter(Collider other)

@@ -24,7 +24,6 @@ public class Turret : ObjectPool
         SetPrefab(_currentBulletModel.BulletPrefab.gameObject);
         _shootingCoroutine = ShootingCoroutine();
         _rotatingCoroutine = RotateCoroutine();
-        CreateStartObjects();
     }
 
     public void StartShooting()

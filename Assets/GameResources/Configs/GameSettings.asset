@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75dc8490bd4d0ed448861b6f0d30231c, type: 3}
-  m_Name: Data
+  m_Name: GameSettings
   m_EditorClassIdentifier: Assembly-CSharp::UnitsConfig
   _unitModels:
   - _maxHp: 100

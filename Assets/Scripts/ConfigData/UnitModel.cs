@@ -16,9 +16,3 @@ public class UnitModel
     public float Speed => _speed;
     public GameObject UnitPrefab => _unitPrefab;
 }
-
-public enum UnitType
-{
-    Player,
-    Enemy1
-}
