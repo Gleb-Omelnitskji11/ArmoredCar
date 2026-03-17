@@ -1,4 +1,5 @@
 using GameUnits;
+using TMPro;
 using UnityEngine;
 using Zenject;
 
@@ -10,7 +11,7 @@ namespace GameServices
         [SerializeField] private Vector3 _enemyOffSet = new Vector3(2f, 4f, 16f);
         [SerializeField] private float _zEnemyMinDistance = 6f;
         [SerializeField] private float _spawnEnemyDelay = 2f;
-
+        
         private UnitsConfig _unitsConfig;
         private PlayerCar _playerCar;
 
@@ -37,7 +38,7 @@ namespace GameServices
         {
             if (_isPaused)
                 return;
-            
+
             _timer += Time.deltaTime;
 
             if (_timer < _spawnEnemyDelay)
@@ -78,13 +79,48 @@ namespace GameServices
 
         private void SpawnNewEnemy(Vector3 carPos)
         {
-            float xRandom = Random.Range(-_enemyOffSet.x, _enemyOffSet.x);
-            float zRandom = Random.Range(_zEnemyMinDistance, _enemyOffSet.z);
-            Vector3 pos = new Vector3(xRandom, _enemyOffSet.y, carPos.z + zRandom);
+            Vector3 pos =GetRandomPosition(carPos);
             var enemy = Get();
             enemy.GetComponent<ChaseEnemy>().InitUnit(_currentEnemyModel, this, _carTransform);
             enemy.transform.position = pos;
             enemy.SetActive(true);
+        }
+
+        private Vector3 GetRandomPosition(Vector3 carPos)
+        {
+            Vector3 pos = default;
+            const int maxAttempts = 10;
+
+            for (int i = 0; i < maxAttempts; i++)
+            {
+                float xRandom = Random.Range(-_enemyOffSet.x, _enemyOffSet.x);
+                float zRandom = Random.Range(_zEnemyMinDistance, _enemyOffSet.z);
+                pos = new Vector3(xRandom, _enemyOffSet.y, carPos.z + zRandom);
+                if(IsPositionValid(pos))
+                    break;
+            }
+            
+            return pos;
+        }
+
+        private bool IsPositionValid(Vector3 position, float minDistance = 2.5f)
+        {
+            float sqrMinDistance = minDistance * minDistance;
+
+            foreach (var enemy in AllObjects)
+            {
+                var go = enemy.Monobehaviour;
+
+                if (!go.activeSelf)
+                    continue;
+
+                float sqrDistance = (go.transform.position - position).sqrMagnitude;
+
+                if (sqrDistance < sqrMinDistance)
+                    return false;
+            }
+
+            return true;
         }
 
         public void Stop()
@@ -108,7 +144,7 @@ namespace GameServices
         {
             foreach (var enemy in AllObjects)
             {
-                if (enemy.Monobehaviour.transform.position.z <= carPos.z - _enemyRemoveDistance)
+                if (!enemy._inPool && enemy.Monobehaviour.transform.position.z <= carPos.z - _enemyRemoveDistance)
                 {
                     enemy.Monobehaviour.GetComponent<ChaseEnemy>().TurnOff();
                 }

@@ -3,11 +3,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
-public class PreloaderInstaller : MonoInstaller<PreloaderInstaller>
+public class PreloaderInstaller : MonoBehaviour
 {
     [SerializeField] private ConfigProvider _configProvider;
     
-    public override void InstallBindings()
+    private void Start()
     {
         StaticContext.Container.Bind<ConfigProvider>().FromInstance(_configProvider).AsSingle();
         StaticContext.Container.Bind<IEventBus>().To<EventBus>().AsSingle();

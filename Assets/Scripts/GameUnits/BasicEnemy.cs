@@ -1,16 +1,17 @@
+using TMPro;
 using UnityEngine;
 
 public class BasicEnemy : Unit, IPooledObject
 {
     public GameObject Monobehaviour => gameObject;
-    public bool _isNotInPool { get; protected set; }
+    public bool _inPool { get; protected set; }
     public ObjectPool Pool { get; protected set; }
     public override void InitUnit(UnitModel model, params object[] additionalPrms)
     {
         base.InitUnit(model);
         
         Pool = additionalPrms[0] as ObjectPool;
-        _isNotInPool = true;
+        _inPool = true;
     }
 
     public override void Died()
@@ -32,6 +33,7 @@ public class BasicEnemy : Unit, IPooledObject
 
     public void TurnOff()
     {
+        _inPool = true;
         Pool.ReturnToPool(this);
     }
 }
