@@ -1,4 +1,4 @@
-using System.Collections;
+using GameUnits;
 using UnityEngine;
 using Zenject;
 
@@ -37,6 +37,7 @@ namespace GameServices
         {
             if (_isPaused)
                 return;
+            
             _timer += Time.deltaTime;
 
             if (_timer < _spawnEnemyDelay)
@@ -49,8 +50,16 @@ namespace GameServices
         public void RefreshLevel()
         {
             ReturnAll();
+            SetLevel();
             SetNearestEnemies();
             ManagePaused(false);
+        }
+
+        private void SetLevel()
+        {
+            initialSize = _unitsConfig.GetDefaultLevelModel.StartEnemyCount;
+            _spawnEnemyDelay = _unitsConfig.GetDefaultLevelModel.EnemyDelay;
+            _currentEnemyModel = _unitsConfig.GetUnitModel(UnitType.Enemy1);
         }
 
         private void ManagePaused(bool isPaused, bool resetTimer = true)
@@ -61,23 +70,31 @@ namespace GameServices
 
         private void SetNearestEnemies()
         {
-            var enemyModel = _unitsConfig.GetUnitModel(UnitType.Enemy1);
-
-            for (int i = 0; i < _unitsConfig.EnemyStartCount; i++)
+            for (int i = 0; i < initialSize; i++)
             {
-                float zRandom = Random.Range(_zEnemyMinDistance, _enemyOffSet.z);
-                zRandom += _carTransform.position.z;
-                float xRandom = Random.Range(-_enemyOffSet.x, _enemyOffSet.x);
-                var enemy = Get();
-                enemy.transform.position = new Vector3(xRandom, _enemyOffSet.y, zRandom);
-                enemy.GetComponent<BasicEnemy>().InitUnit(enemyModel, this);
-                enemy.SetActive(true);
+                SpawnNewEnemy(_carTransform.position);
             }
+        }
+
+        private void SpawnNewEnemy(Vector3 carPos)
+        {
+            float xRandom = Random.Range(-_enemyOffSet.x, _enemyOffSet.x);
+            float zRandom = Random.Range(_zEnemyMinDistance, _enemyOffSet.z);
+            Vector3 pos = new Vector3(xRandom, _enemyOffSet.y, carPos.z + zRandom);
+            var enemy = Get();
+            enemy.GetComponent<ChaseEnemy>().InitUnit(_currentEnemyModel, this, _carTransform);
+            enemy.transform.position = pos;
+            enemy.SetActive(true);
         }
 
         public void Stop()
         {
             ManagePaused(false);
+        }
+
+        public void Resume()
+        {
+            ManagePaused(true, false);
         }
 
         private void SpawnEnemies()
@@ -87,24 +104,13 @@ namespace GameServices
             SpawnNewEnemy(carPos);
         }
 
-        private void SpawnNewEnemy(Vector3 carPos)
-        {
-            var enemy = Get();
-
-            float xRandom = Random.Range(-_enemyOffSet.x, _enemyOffSet.x);
-            Vector3 pos = new Vector3(xRandom, _enemyOffSet.y, carPos.z + _enemyOffSet.z);
-            enemy.GetComponent<BasicEnemy>().InitUnit(_currentEnemyModel, this);
-            enemy.transform.position = pos;
-            enemy.SetActive(true);
-        }
-
         private void CheckFarEnemies(Vector3 carPos)
         {
             foreach (var enemy in AllObjects)
             {
                 if (enemy.Monobehaviour.transform.position.z <= carPos.z - _enemyRemoveDistance)
                 {
-                    enemy.Monobehaviour.GetComponent<BasicEnemy>().TurnOff();
+                    enemy.Monobehaviour.GetComponent<ChaseEnemy>().TurnOff();
                 }
             }
         }

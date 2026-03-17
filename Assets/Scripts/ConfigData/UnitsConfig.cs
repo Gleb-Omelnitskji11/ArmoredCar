@@ -1,4 +1,5 @@
 using System;
+using ConfigData;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UnitsConfig", menuName = "ScriptableObjects/UnitsConfig", order = 0)]
@@ -6,7 +7,6 @@ public class UnitsConfig : ScriptableObject
 {
     [SerializeField] private UnitModel[] _unitModels = new UnitModel[2];
     [SerializeField] private TurretModel[] _turretModels = new TurretModel[1];
-    [SerializeField] private int _enemyStartCount;
     [SerializeField] private LevelModel _defaultLevelModel;
     
     public LevelModel GetDefaultLevelModel => _defaultLevelModel;
@@ -32,6 +32,4 @@ public class UnitsConfig : ScriptableObject
         
         throw new Exception("No turret model found");
     }
-
-    public int EnemyStartCount => _enemyStartCount;
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using GameServices;
 using UnityEngine;
 using Zenject;
@@ -7,8 +6,8 @@ public class Turret : ObjectPool
 {
     [SerializeField] private Transform _bulletSpawnPoint;
     [SerializeField] private Transform _turretObj;
-    public TurretModel TurretModel { get; private set; }
-
+    
+    private TurretModel _turretModel;
     private BulletModel _currentBulletModel;
     private IInputProvider _input;
     private Quaternion _targetRotation = Quaternion.identity;
@@ -24,9 +23,9 @@ public class Turret : ObjectPool
 
     public void Init(TurretModel model, float carSpeed)
     {
-        TurretModel = model;
+        _turretModel = model;
         _carSpeed = carSpeed;
-        _currentBulletModel = TurretModel.BulletPrefab[0];
+        _currentBulletModel = _turretModel.BulletPrefab[0];
         ReturnAll();
         SetPrefab(_currentBulletModel.BulletPrefab.gameObject);
     }
@@ -54,7 +53,7 @@ public class Turret : ObjectPool
     {
         _shootTimer += Time.deltaTime;
 
-        if (_shootTimer < TurretModel.FireDelay)
+        if (_shootTimer < _turretModel.FireDelay)
             return;
 
         Shot();
@@ -87,7 +86,7 @@ public class Turret : ObjectPool
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation,
             _targetRotation,
-            TurretModel.RotationSpeed * Time.deltaTime
+            _turretModel.RotationSpeed * Time.deltaTime
         );
     }
 }

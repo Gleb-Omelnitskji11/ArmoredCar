@@ -1,26 +1,29 @@
+using ConfigData;
+using UI;
 using UnityEngine;
 using Zenject;
 
 namespace GameServices
 {
-    public class LevelProgression : MonoBehaviour
+    public class LevelLoader : MonoBehaviour
     {
         [SerializeField] private Vector3 _carStartPos = new Vector3(0, 0.5f, -48.6f);
-    
+
         private PlayerCar _car;
         private GroundsController _groundsController;
         private ResultPopup _resultPopup;
         private EnemyCreator _enemyCreator;
         private UnitsConfig _unitsConfig;
-    
-        private LevelModel _levelModel;
+
+        private ProgressBar _progressBar;
 
         public bool IsPaused { get; private set; } = true;
 
         [Inject]
         public void Construct(PlayerCar playerCar, GroundsController groundsController, ResultPopup resultPopup,
-            EnemyCreator enemyCreator, ConfigProvider configProvider)
+            EnemyCreator enemyCreator, ConfigProvider configProvider, ProgressBar progressBar)
         {
+            _progressBar = progressBar;
             _car = playerCar;
             _groundsController = groundsController;
             _resultPopup = resultPopup;
@@ -30,17 +33,24 @@ namespace GameServices
 
         private void Start()
         {
+            _progressBar.OnFinish += OnWin;
             _resultPopup.OnStartClicked += Restart;
             _car.OnDied += ShowLosePopup;
         }
 
-        private void Restart()
+        private void OnDestroy()
+        {
+            _progressBar.OnFinish -= OnWin;
+            _resultPopup.OnStartClicked -= Restart;
+            _car.OnDied -= ShowLosePopup;
+        }
+
+        public void Restart()
         {
             IsPaused = false;
             _groundsController.Restart();
             ResetCar();
-            _levelModel = _unitsConfig.GetDefaultLevelModel;
-            SetFinishPoint();
+            _progressBar.Setup(_unitsConfig.GetDefaultLevelModel, _carStartPos.z, _car.transform);
             _enemyCreator.RefreshLevel();
             _car.StartLevel();
         }
@@ -53,32 +63,34 @@ namespace GameServices
             _car.InitUnit(carModel, turretModel);
         }
 
-        private void SetFinishPoint()
+        private void ShowLosePopup()
         {
-            Vector3 curPoint = transform.position;
-            curPoint.z = _levelModel.Distance + _carStartPos.z;
-        }
-    
-        private void OnTriggerEnter(Collider other)
-        {
-            if (!other.CompareTag(Constantns.Player))
-                return;
-
-            Pause();
-            _resultPopup.ShowResult(true);
-        }
-
-        public void ShowLosePopup()
-        {
+            _enemyCreator.Clear();
             Pause();
             _resultPopup.ShowResult(false);
         }
 
-        private void Pause()
+        private void OnWin()
+        {
+            _enemyCreator.Clear();
+            Pause();
+            _resultPopup.ShowResult(true);
+        }
+
+        public void Pause()
         {
             IsPaused = true;
+            _car.Stop();
             _enemyCreator.Stop();
             _groundsController.OnPause();
+        }
+
+        public void Resume()
+        {
+            IsPaused = false;
+            _car.StartLevel();
+            _enemyCreator.Resume();
+            _groundsController.OnResume();
         }
     }
 }

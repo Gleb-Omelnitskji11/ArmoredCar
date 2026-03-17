@@ -36,6 +36,11 @@ public class ObjectPool : MonoBehaviour
         obj.transform.SetParent(_parentObject.transform);
     }
 
+    public void Clear()
+    {
+        ReturnAll();
+    }
+
     protected void ReturnAll()
     {
         foreach (var obj in AllObjects)

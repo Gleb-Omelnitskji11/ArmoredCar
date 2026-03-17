@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1655540926154011561}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.03, y: 1.15, z: 2.04}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -41,6 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7685995102594583029}
   - component: {fileID: 364834939481265921}
+  - component: {fileID: 6334568842517973114}
+  - component: {fileID: 4418970892909143439}
   m_Layer: 7
   m_Name: Car
   m_TagString: Player
@@ -87,7 +89,54 @@ MonoBehaviour:
   - {fileID: 2625200004659027304}
   - {fileID: 1862357362459996866}
   - {fileID: 7415824145442141668}
-  _stop: 0
+--- !u!65 &6334568842517973114
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084562519942267600}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.82, y: 2.22, z: 4.2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &4418970892909143439
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3084562519942267600}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &6399474856033316954
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,6 +195,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7685995102594583029}
     m_Modifications:
+    - target: {fileID: 282679184015952996, guid: cd2bea5a70189754ab69a946d067d88d, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1307345042895782061, guid: cd2bea5a70189754ab69a946d067d88d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -176,7 +229,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1307345042895782061, guid: cd2bea5a70189754ab69a946d067d88d, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1.47
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1307345042895782061, guid: cd2bea5a70189754ab69a946d067d88d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -229,6 +282,14 @@ PrefabInstance:
     - target: {fileID: 2077150043690954103, guid: cd2bea5a70189754ab69a946d067d88d, type: 3}
       propertyPath: m_Name
       value: HpBarCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2808425057426229691, guid: cd2bea5a70189754ab69a946d067d88d, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3481530815650435093, guid: cd2bea5a70189754ab69a946d067d88d, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6102971273284842111, guid: cd2bea5a70189754ab69a946d067d88d, type: 3}
       propertyPath: m_AnchorMax.x

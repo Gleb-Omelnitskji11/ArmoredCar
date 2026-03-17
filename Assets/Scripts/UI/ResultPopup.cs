@@ -21,7 +21,6 @@ public class ResultPopup : MonoBehaviour
         _winText.gameObject.SetActive(win);
     }
 
-    // Update is called once per frame
     private void StartGame()
     {
         gameObject.SetActive(false);

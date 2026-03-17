@@ -13,26 +13,6 @@ public class PlayerCar : Unit
     private Vector3 _carPosition;
     private Sequence _seq;
 
-#if UNITY_EDITOR
-    //test 
-    [SerializeField] private bool _stop;
-    private bool _isMoving = true;
-
-    private void Update()
-    {
-        if (_isMoving && _stop)
-        {
-            _isMoving = false;
-            _seq?.Kill();
-        }
-
-        if (!_isMoving && !_stop)
-        {
-            UpdateDirection();
-            _isMoving = true;
-        }
-    }
-#endif
     public override void InitUnit(UnitModel model, params object[] additionalPrms)
     {
         base.InitUnit(model);
@@ -63,25 +43,17 @@ public class PlayerCar : Unit
         _seq.OnComplete(UpdateDirection);
     }
 
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag(Constantns.Enemy))
-        {
-            if (other.TryGetComponent<BasicEnemy>(out BasicEnemy enemy))
-            {
-                int damageTaken = enemy.GetCollisionDamage();
-                enemy.TakeDamage(GetCollisionDamage());
-                TakeDamage(damageTaken);
-            }
-        }
-    }
-
     public override void TakeDamage(int damageTaken)
     {
         base.TakeDamage(damageTaken);
     }
 
     public override void Died()
+    {
+        Stop();
+    }
+
+    public void Stop()
     {
         _seq?.Kill();
         _turret.Stop();

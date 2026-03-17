@@ -20,11 +20,10 @@ public class BasicEnemy : Unit, IPooledObject
     
     public virtual void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(Constantns.Enemy))
+        if (other.CompareTag(Constantns.Player))
         {
             if (other.TryGetComponent<PlayerCar>(out PlayerCar player))
             {
-                int damageTaken = _unitModel.CollisionDamage;
                 TakeLethalDamage();
                 player.TakeDamage(GetCollisionDamage());
             }
