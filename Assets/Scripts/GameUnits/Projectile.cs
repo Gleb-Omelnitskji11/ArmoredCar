@@ -27,6 +27,7 @@ namespace GameUnits
 
         public void StartMovement(Vector3 forward)
         {
+            _tween?.Kill();
             Vector3 newPos = transform.position + forward * _bulletModel.ProjectSpeed * _bulletModel.ProjectLifetime;
             _tween = transform.DOMove(newPos, _bulletModel.ProjectLifetime).SetEase(Ease.Linear);
             _tween.OnComplete(TurnOff);
@@ -51,6 +52,24 @@ namespace GameUnits
             _tween?.Kill();
             _trailRenderer.Clear();
             Pool.ReturnToPool(this);
+        }
+
+        public void OnPausedChanged(bool isPaused)
+        {
+            if(isPaused) Pause();
+            else Resume();
+        }
+        
+        public void Pause()
+        {
+            if (_inPool) return;
+            _tween?.Pause();
+        }
+
+        public void Resume()
+        {
+            if (_inPool) return;
+            _tween?.Play();
         }
     }
 }

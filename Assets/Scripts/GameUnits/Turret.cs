@@ -1,4 +1,6 @@
+using System;
 using ConfigData;
+using Core;
 using GameServices;
 using UnityEngine;
 using Zenject;
@@ -34,11 +36,18 @@ namespace GameUnits
         public void Stop()
         {
             _stop = true;
+            PausedChanged?.Invoke(true);
         }
 
         public void Activate()
         {
             _stop = false;
+            PausedChanged?.Invoke(false);
+        }
+
+        private void OnDestroy()
+        {
+            PausedChanged = null;
         }
 
         private void Update()
@@ -63,12 +72,14 @@ namespace GameUnits
 
         private void Shot()
         {
-            var bullet = Get();
+            var bullet = Get(out bool isNew);
             bullet.transform.position = _bulletSpawnPoint.position;
             Projectile projectile = bullet.GetComponent<Projectile>();
             projectile.Init(this, _currentBulletModel);
             projectile.gameObject.SetActive(true);
             projectile.StartMovement(_bulletSpawnPoint.forward);
+            if (isNew)
+                PausedChanged += projectile.OnPausedChanged;
         }
 
         private void HandleRotation()
@@ -90,5 +101,7 @@ namespace GameUnits
                 _turretModel.RotationSpeed * Time.deltaTime
             );
         }
+        
+        private event Action<bool> PausedChanged;
     }
 }

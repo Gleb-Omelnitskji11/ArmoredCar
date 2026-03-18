@@ -11,7 +11,7 @@ namespace GameServices
 
         protected Queue<IPooledObject> Pool = new Queue<IPooledObject>();
         protected List<IPooledObject> AllObjects = new List<IPooledObject>();
-    
+
         protected IPooledObject _spawnPrefab;
         public void SetPrefab(GameObject prefab) => _spawnPrefab = prefab.GetComponent<IPooledObject>();
 
@@ -24,10 +24,17 @@ namespace GameServices
             AllObjects.Add(pooledObj);
         }
 
-        protected GameObject Get()
+        protected GameObject Get(out bool isNew)
         {
             if (Pool.Count == 0)
+            {
                 CreateNewObject();
+                isNew = true;
+            }
+            else
+            {
+                isNew = false;
+            }
 
             var obj = Pool.Dequeue();
             return obj.Monobehaviour;

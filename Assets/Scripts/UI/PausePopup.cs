@@ -1,3 +1,5 @@
+using Core;
+using Core.BusEvents;
 using GameServices;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,11 +12,13 @@ namespace UI
         [SerializeField] private Button _resumeButton;
         [SerializeField] private Button _restartButton;
         private LevelLoader _levelLoader;
+        private IEventBus _eventBus;
 
 
         [Inject]
-        public void Construct(LevelLoader levelLoader)
+        public void Construct(LevelLoader levelLoader, IEventBus eventBus)
         {
+            _eventBus = eventBus;
             _levelLoader = levelLoader;
         }
 
@@ -32,19 +36,19 @@ namespace UI
 
         private void Pause()
         {
-            _levelLoader.Pause();
+            _eventBus.Publish<PauseEvent>(new PauseEvent(true));
         }
 
         private void Resume()
         {
             gameObject.SetActive(false);
-            _levelLoader.Resume();
+            _eventBus.Publish<PauseEvent>(new PauseEvent(false));
         }
         
         private void Restart()
         {
             gameObject.SetActive(false);
-            _levelLoader.Restart();
+            _eventBus.Publish<RestartEvent>(new RestartEvent());
         }
     }
 }

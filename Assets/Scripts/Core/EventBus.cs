@@ -36,9 +36,4 @@ namespace Core
                 ((Action<T>)listener)?.Invoke(evt);
         }
     }
-
-
-    public interface IEvent
-    {
-    }
 }

@@ -1,5 +1,6 @@
 using ConfigData;
 using Core;
+using Core.BusEvents;
 using GameUnits;
 using UI;
 using UnityEngine;
@@ -12,48 +13,41 @@ namespace GameServices
         [SerializeField] private Vector3 _carStartPos = new Vector3(0, 0.5f, -48.6f);
 
         private PlayerCar _car;
-        private GroundsController _groundsController;
-        private ResultPopup _resultPopup;
-        private EnemyCreator _enemyCreator;
         private UnitsConfig _unitsConfig;
 
         private ProgressBar _progressBar;
+        private IEventBus _eventBus;
 
         public bool IsPaused { get; private set; } = true;
 
         [Inject]
-        public void Construct(PlayerCar playerCar, GroundsController groundsController, ResultPopup resultPopup,
-            EnemyCreator enemyCreator, ConfigProvider configProvider, ProgressBar progressBar)
+        public void Construct(PlayerCar playerCar, ConfigProvider configProvider, ProgressBar progressBar, IEventBus eventBus)
         {
+            _eventBus = eventBus;
             _progressBar = progressBar;
             _car = playerCar;
-            _groundsController = groundsController;
-            _resultPopup = resultPopup;
-            _enemyCreator = enemyCreator;
             _unitsConfig = configProvider.UnitConfig;
         }
 
         private void Start()
         {
-            _progressBar.OnFinish += OnWin;
-            _resultPopup.OnStartClicked += Restart;
-            _car.OnDied += ShowLosePopup;
+            _eventBus.Subscribe<GameResultEvent>(OnGameEnd);
+            _eventBus.Subscribe<RestartEvent>(Restart);
+            _eventBus.Subscribe<PauseEvent>(OnPause);
         }
 
         private void OnDestroy()
         {
-            _progressBar.OnFinish -= OnWin;
-            _resultPopup.OnStartClicked -= Restart;
-            _car.OnDied -= ShowLosePopup;
+            _eventBus.Unsubscribe<GameResultEvent>(OnGameEnd);
+            _eventBus.Unsubscribe<RestartEvent>(Restart);
+            _eventBus.Unsubscribe<PauseEvent>(OnPause);
         }
 
-        public void Restart()
+        public void Restart(RestartEvent restartEvent)
         {
             IsPaused = false;
-            _groundsController.Restart();
             ResetCar();
-            _progressBar.Setup(_unitsConfig.GetDefaultLevelModel, _carStartPos.z, _car.transform);
-            _enemyCreator.RefreshLevel();
+            _progressBar.Setup(_unitsConfig.GetDefaultLevelModel, _carStartPos.z);
             _car.StartLevel();
         }
 
@@ -65,34 +59,39 @@ namespace GameServices
             _car.InitUnit(carModel, turretModel);
         }
 
-        private void ShowLosePopup()
+        private void OnLose()
         {
-            _enemyCreator.Clear();
             Pause();
-            _resultPopup.ShowResult(false);
+        }
+
+        private void OnGameEnd(GameResultEvent gameResultEvent)
+        {
+            if (gameResultEvent.IsWin)
+                OnWin();
+            else OnLose();
         }
 
         private void OnWin()
         {
-            _enemyCreator.Clear();
             Pause();
-            _resultPopup.ShowResult(true);
         }
 
-        public void Pause()
+        private void OnPause(PauseEvent pauseEvent)
+        {
+            if (pauseEvent.IsPause) Pause();
+            else Resume();
+        }
+
+        private void Pause()
         {
             IsPaused = true;
             _car.Stop();
-            _enemyCreator.Stop();
-            _groundsController.OnPause();
         }
 
-        public void Resume()
+        private void Resume()
         {
             IsPaused = false;
             _car.StartLevel();
-            _enemyCreator.Resume();
-            _groundsController.OnResume();
         }
     }
 }

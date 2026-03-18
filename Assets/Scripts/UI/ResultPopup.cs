@@ -1,7 +1,9 @@
-using System;
+using Core;
+using Core.BusEvents;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace UI
 {
@@ -10,13 +12,33 @@ namespace UI
         [SerializeField] private TMP_Text _winText;
         [SerializeField] private TMP_Text _loseText;
         [SerializeField] private Button _repeatButton;
+        
+        private IEventBus _eventBus;
+
+        [Inject]
+        public void Construct(IEventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
     
-        private void Awake()
+        private void Start()
         {
             _repeatButton.onClick.AddListener(StartGame);
+            _eventBus.Subscribe<GameResultEvent>(OnGameEnd);
+        }
+        
+        private void OnDestroy()
+        {
+            _repeatButton.onClick.RemoveAllListeners();
+            _eventBus.Unsubscribe<GameResultEvent>(OnGameEnd);
         }
 
-        public void ShowResult(bool win)
+        private void OnGameEnd(GameResultEvent gameResultEvent)
+        {
+            ShowResult(gameResultEvent.IsWin);
+        }
+
+        private void ShowResult(bool win)
         {
             gameObject.SetActive(true);
             _loseText.gameObject.SetActive(!win);
@@ -26,9 +48,7 @@ namespace UI
         private void StartGame()
         {
             gameObject.SetActive(false);
-            OnStartClicked?.Invoke();
+            _eventBus.Publish<RestartEvent>(new RestartEvent());
         }
-
-        public event Action OnStartClicked;
     }
 }

@@ -1,5 +1,6 @@
 using ConfigData;
 using Core;
+using Core.BusEvents;
 using GameUnits;
 using UnityEngine;
 using Zenject;
@@ -15,6 +16,7 @@ namespace GameServices
         
         private UnitsConfig _unitsConfig;
         private PlayerCar _playerCar;
+        private IEventBus _eventBus;
 
         private Transform _carTransform;
         private UnitModel _currentEnemyModel;
@@ -22,10 +24,11 @@ namespace GameServices
         private float _timer;
 
         [Inject]
-        public void Construct(ConfigProvider configProvider, PlayerCar playerCar)
+        public void Construct(ConfigProvider configProvider, PlayerCar playerCar, IEventBus eventBus)
         {
             _unitsConfig = configProvider.UnitConfig;
             _playerCar = playerCar;
+            _eventBus = eventBus;
         }
 
         private void Start()
@@ -33,6 +36,22 @@ namespace GameServices
             _currentEnemyModel = _unitsConfig.GetUnitModel(UnitType.Enemy1);
             _carTransform = _playerCar.transform;
             SetPrefab(_currentEnemyModel.UnitPrefab);
+
+            Subscribe();
+        }
+        
+        private void Subscribe()
+        {
+            _eventBus.Subscribe<GameResultEvent>(OnGameResult);
+            _eventBus.Subscribe<RestartEvent>(Restart);
+            _eventBus.Subscribe<PauseEvent>(OnPauseResult);
+        }
+        
+        private void OnDestroy()
+        {
+            _eventBus.Unsubscribe<GameResultEvent>(OnGameResult);
+            _eventBus.Unsubscribe<RestartEvent>(Restart);
+            _eventBus.Unsubscribe<PauseEvent>(OnPauseResult);
         }
 
         private void Update()
@@ -81,7 +100,7 @@ namespace GameServices
         private void SpawnNewEnemy(Vector3 carPos)
         {
             Vector3 pos =GetRandomPosition(carPos);
-            var enemy = Get();
+            var enemy = Get(out bool isNew);
             enemy.GetComponent<ChaseEnemy>().InitUnit(_currentEnemyModel, this, _carTransform);
             enemy.transform.position = pos;
             enemy.SetActive(true);
@@ -150,6 +169,22 @@ namespace GameServices
                     enemy.Monobehaviour.GetComponent<ChaseEnemy>().TurnOff();
                 }
             }
+        }
+        
+        private void OnGameResult(GameResultEvent gameResultEvent)
+        {
+            Clear();
+            Stop();
+        }
+        
+        private void OnPauseResult(PauseEvent pauseEvent)
+        {
+            Stop();
+        }
+
+        private void Restart(RestartEvent restartEvent)
+        {
+            RefreshLevel();
         }
     }
 }

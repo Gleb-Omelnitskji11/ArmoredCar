@@ -1,3 +1,5 @@
+using Core;
+using Core.BusEvents;
 using GameUnits;
 using UnityEngine;
 using Zenject;
@@ -17,13 +19,29 @@ namespace GameServices
         private int _currentGroundIndex;
         private float _nextZPoint;
         private bool _active;
+        private IEventBus _eventBus;
 
         [Inject]
-        public void Construct(PlayerCar car)
+        public void Construct(PlayerCar car, IEventBus eventBus)
         {
             _car = car.transform;
+            _eventBus = eventBus;
         }
 
+        private void Start()
+        {
+            _eventBus.Subscribe<GameResultEvent>(OnGameResult);
+            _eventBus.Subscribe<RestartEvent>(Restart);
+            _eventBus.Subscribe<PauseEvent>(OnPauseResult);
+        }
+        
+        private void OnDestroy()
+        {
+            _eventBus.Unsubscribe<GameResultEvent>(OnGameResult);
+            _eventBus.Unsubscribe<RestartEvent>(Restart);
+            _eventBus.Unsubscribe<PauseEvent>(OnPauseResult);
+        }
+        
         private void Update()
         {
             if (!_active) return;
@@ -39,17 +57,26 @@ namespace GameServices
             }
         }
 
-        public void Restart()
+        private void OnGameResult(GameResultEvent gameResultEvent)
+        {
+            OnPause(false);
+        }
+        
+        private void OnPauseResult(PauseEvent pauseEvent)
+        {
+            OnPause(pauseEvent.IsPause);
+        }
+
+        private void Restart(RestartEvent restartEvent)
         {
             _grounds[0].position = new Vector3(0f, 0f, GroundStart);
             _grounds[1].position = new Vector3(0f, 0f, MoverOffset);
             _currentGroundIndex = 0;
             _additionalGroundIndex = 1;
             _nextZPoint = ZTriggerOffset;
-            OnResume();
+            _active = true;
         }
     
-        public void OnPause() => _active = false;
-        public void OnResume() => _active = true;
+        private void OnPause(bool active) => _active = active;
     }
 }

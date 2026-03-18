@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
 using ConfigData;
+using Core;
+using Core.BusEvents;
 using DG.Tweening;
 using UnityEngine;
+using Zenject;
 
 namespace GameUnits
 {
@@ -14,6 +18,13 @@ namespace GameUnits
 
         private Vector3 _carPosition;
         private Sequence _seq;
+        private IEventBus _eventBus;
+
+        [Inject]
+        public void Construct(IEventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
 
         public void InitUnit(UnitModel model, TurretModel turretModel)
         {
@@ -50,6 +61,8 @@ namespace GameUnits
 
         public override void Died()
         {
+            GameResultEvent gameResultEvent = new GameResultEvent(false);
+            _eventBus.Publish<GameResultEvent>(gameResultEvent);
             Stop();
         }
 

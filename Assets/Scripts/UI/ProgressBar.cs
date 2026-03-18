@@ -1,7 +1,11 @@
 using System;
 using ConfigData;
+using Core;
+using Core.BusEvents;
+using GameUnits;
 using TMPro;
 using UnityEngine;
+using Zenject;
 using Slider = UnityEngine.UI.Slider;
 
 namespace UI
@@ -10,15 +14,24 @@ namespace UI
     {
         [SerializeField] private Slider _progressBar;
         [SerializeField] private TMP_Text _timerText;
+        
         private LevelModel _level;
         private float _startZ;
         private int _progress;
         private Transform _carTransform;
         private bool _paused = true;
+        
+        private IEventBus _eventBus;
 
-        public void Setup(LevelModel level, float startZ, Transform carTransform)
+        [Inject]
+        public void Construct(IEventBus eventBus, PlayerCar playerCar)
         {
-            _carTransform = carTransform;
+            _carTransform = playerCar.transform;
+            _eventBus = eventBus;
+        }
+
+        public void Setup(LevelModel level, float startZ)
+        {
             _startZ = startZ;
             _level = level;
             _paused = false;
@@ -38,10 +51,9 @@ namespace UI
             if (_progress >= 100)
             {
                 _paused = true;
-                OnFinish?.Invoke();
+                GameResultEvent gameResultEvent = new GameResultEvent(true);
+                _eventBus.Publish<GameResultEvent>(gameResultEvent);
             }
         }
-
-        public event Action OnFinish;
     }
 }

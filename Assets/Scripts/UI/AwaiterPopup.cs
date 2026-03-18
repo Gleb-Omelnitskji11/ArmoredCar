@@ -1,5 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Core;
+using Core.BusEvents;
 using DG.Tweening;
 using GameServices;
 using TMPro;
@@ -12,14 +14,17 @@ namespace UI
     {
         [SerializeField] private TMP_Text _timerText;
         [SerializeField] private int _seconds;
+        
         private LevelLoader _levelLoader;
         private float _timer;
         private Tween _timerTween;
         private CancellationTokenSource _cts;
+        private IEventBus _eventBus;
 
         [Inject]
-        public void Construct(LevelLoader levelLoader)
+        public void Construct(LevelLoader levelLoader, IEventBus eventBus)
         {
+            _eventBus = eventBus;
             _levelLoader = levelLoader;
         }
 
@@ -55,7 +60,7 @@ namespace UI
         private void StartGame()
         {
             gameObject.SetActive(false);
-            _levelLoader.Restart();
+            _eventBus.Publish<RestartEvent>(new RestartEvent());
         }
     }
 }
