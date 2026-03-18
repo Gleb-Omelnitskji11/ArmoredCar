@@ -1,14 +1,17 @@
+using ConfigData;
 using UnityEngine;
-using Zenject;
 
-public class ConfigProvider : MonoBehaviour
+namespace Core
 {
-    [SerializeField] private UnitsConfig _unitConfig;
-
-    private void Start()
+    public class ConfigProvider : MonoBehaviour
     {
-        DontDestroyOnLoad(this);
-    }
+        [SerializeField] private UnitsConfig _unitConfig;
 
-    public UnitsConfig UnitConfig => _unitConfig;
+        private void Start()
+        {
+            DontDestroyOnLoad(this);
+        }
+
+        public UnitsConfig UnitConfig => _unitConfig;
+    }
 }

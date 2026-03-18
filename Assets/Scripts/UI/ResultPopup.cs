@@ -3,29 +3,32 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResultPopup : MonoBehaviour
+namespace UI
 {
-    [SerializeField] private TMP_Text _winText;
-    [SerializeField] private TMP_Text _loseText;
-    [SerializeField] private Button _repeatButton;
+    public class ResultPopup : MonoBehaviour
+    {
+        [SerializeField] private TMP_Text _winText;
+        [SerializeField] private TMP_Text _loseText;
+        [SerializeField] private Button _repeatButton;
     
-    private void Awake()
-    {
-        _repeatButton.onClick.AddListener(StartGame);
-    }
+        private void Awake()
+        {
+            _repeatButton.onClick.AddListener(StartGame);
+        }
 
-    public void ShowResult(bool win)
-    {
-        gameObject.SetActive(true);
-        _loseText.gameObject.SetActive(!win);
-        _winText.gameObject.SetActive(win);
-    }
+        public void ShowResult(bool win)
+        {
+            gameObject.SetActive(true);
+            _loseText.gameObject.SetActive(!win);
+            _winText.gameObject.SetActive(win);
+        }
 
-    private void StartGame()
-    {
-        gameObject.SetActive(false);
-        OnStartClicked?.Invoke();
-    }
+        private void StartGame()
+        {
+            gameObject.SetActive(false);
+            OnStartClicked?.Invoke();
+        }
 
-    public event Action OnStartClicked;
+        public event Action OnStartClicked;
+    }
 }

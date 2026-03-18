@@ -1,5 +1,6 @@
+using ConfigData;
+using Core;
 using GameUnits;
-using TMPro;
 using UnityEngine;
 using Zenject;
 

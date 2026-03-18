@@ -1,4 +1,7 @@
+using ConfigData;
+using Core;
 using DG.Tweening;
+using GameServices;
 using UnityEngine;
 
 namespace GameUnits
@@ -22,17 +25,16 @@ namespace GameUnits
             _inPool = false;
         }
 
-        public void StartMovement(Vector3 forward, float carSpeed)
+        public void StartMovement(Vector3 forward)
         {
             Vector3 newPos = transform.position + forward * _bulletModel.ProjectSpeed * _bulletModel.ProjectLifetime;
-            newPos.z += carSpeed * _bulletModel.ProjectLifetime;
             _tween = transform.DOMove(newPos, _bulletModel.ProjectLifetime).SetEase(Ease.Linear);
             _tween.OnComplete(TurnOff);
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag(Constantns.Enemy))
+            if (other.CompareTag(Constants.Enemy))
             {
                 if (other.TryGetComponent<BasicEnemy>(out BasicEnemy enemy))
                 {

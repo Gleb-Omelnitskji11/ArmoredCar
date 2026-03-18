@@ -1,39 +1,44 @@
-using TMPro;
+using ConfigData;
+using Core;
+using GameServices;
 using UnityEngine;
 
-public class BasicEnemy : Unit, IPooledObject
+namespace GameUnits
 {
-    public GameObject Monobehaviour => gameObject;
-    public bool _inPool { get; protected set; }
-    public ObjectPool Pool { get; protected set; }
-    public override void InitUnit(UnitModel model, params object[] additionalPrms)
+    public class BasicEnemy : Unit, IPooledObject
     {
-        base.InitUnit(model);
-        
-        Pool = additionalPrms[0] as ObjectPool;
-        _inPool = true;
-    }
-
-    public override void Died()
-    {
-        TurnOff();
-    }
-    
-    public virtual void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag(Constantns.Player))
+        public GameObject Monobehaviour => gameObject;
+        public bool _inPool { get; protected set; }
+        public ObjectPool Pool { get; protected set; }
+        public void InitUnit(UnitModel model, ObjectPool objectPool)
         {
-            if (other.TryGetComponent<PlayerCar>(out PlayerCar player))
+            base.InitUnit(model);
+        
+            Pool = objectPool;
+            _inPool = true;
+        }
+
+        public override void Died()
+        {
+            TurnOff();
+        }
+    
+        public virtual void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag(Constants.Player))
             {
-                TakeLethalDamage();
-                player.TakeDamage(GetCollisionDamage());
+                if (other.TryGetComponent<PlayerCar>(out PlayerCar player))
+                {
+                    TakeLethalDamage();
+                    player.TakeDamage(GetCollisionDamage());
+                }
             }
         }
-    }
 
-    public void TurnOff()
-    {
-        _inPool = true;
-        Pool.ReturnToPool(this);
+        public void TurnOff()
+        {
+            _inPool = true;
+            Pool.ReturnToPool(this);
+        }
     }
 }

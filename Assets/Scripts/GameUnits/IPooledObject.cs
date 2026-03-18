@@ -1,9 +1,13 @@
+using GameServices;
 using UnityEngine;
 
-public interface IPooledObject
+namespace GameUnits
 {
-    public bool _inPool { get;}
-    public ObjectPool Pool { get;}
-    public void TurnOff();
-    public GameObject Monobehaviour { get;}
+    public interface IPooledObject
+    {
+        public bool _inPool { get;}
+        public ObjectPool Pool { get;}
+        public void TurnOff();
+        public GameObject Monobehaviour { get;}
+    }
 }

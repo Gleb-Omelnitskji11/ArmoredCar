@@ -1,5 +1,8 @@
-public enum UnitType
+namespace ConfigData
 {
-    Player,
-    Enemy1
+    public enum UnitType
+    {
+        Player,
+        Enemy1
+    }
 }

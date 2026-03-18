@@ -1,3 +1,5 @@
+using ConfigData;
+using GameServices;
 using UnityEngine;
 
 namespace GameUnits
@@ -14,25 +16,18 @@ namespace GameUnits
 
         private Transform _player;
         private bool _isChasing;
-        private bool _stop;
 
-        public override void InitUnit(UnitModel model, params object[] additionalPrms)
+        public void InitUnit(UnitModel model, ObjectPool objectPool, Transform carTransform)
         {
-            base.InitUnit(model, additionalPrms);
+            base.InitUnit(model, objectPool);
 
-            Pool = additionalPrms[0] as ObjectPool;
-            _player = additionalPrms[1] as Transform;
-
+            _player = carTransform;
             _isChasing = false;
-
             SetIdle();
         }
 
         private void Update()
         {
-            if (_stop || _player == null)
-                return;
-
             float sqrDistance = (_player.position - transform.position).sqrMagnitude;
 
             if (!_isChasing && sqrDistance <= _agroDistance * _agroDistance)
