@@ -231,6 +231,9 @@ MonoBehaviour:
   - {fileID: 2625200004659027304}
   - {fileID: 1862357362459996866}
   - {fileID: 7415824145442141668}
+  _trails:
+  - {fileID: 3017171167737454961}
+  - {fileID: 4909823431760144522}
 --- !u!65 &6334568842517973114
 BoxCollider:
   m_ObjectHideFlags: 0

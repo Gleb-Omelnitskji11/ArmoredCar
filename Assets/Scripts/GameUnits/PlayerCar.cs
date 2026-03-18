@@ -13,6 +13,7 @@ namespace GameUnits
     {
         [SerializeField] private Turret _turret;
         [SerializeField] private Transform[] _wheels;
+        [SerializeField] private TrailRenderer[] _trails;
 
         private IEnumerator _moveCoroutine;
 
@@ -35,6 +36,11 @@ namespace GameUnits
 
         public void StartLevel()
         {
+            foreach (var trail in _trails)
+            {
+                trail.Clear();
+            }
+            
             _seq?.Kill();
             UpdateDirection();
             _turret.Activate();

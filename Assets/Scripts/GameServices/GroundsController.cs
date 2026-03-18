@@ -77,6 +77,6 @@ namespace GameServices
             _active = true;
         }
     
-        private void OnPause(bool active) => _active = active;
+        private void OnPause(bool active) => _active = !active;
     }
 }

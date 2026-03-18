@@ -27,6 +27,7 @@ namespace GameUnits
 
         public void StartMovement(Vector3 forward)
         {
+            _trailRenderer.Clear();
             _tween?.Kill();
             Vector3 newPos = transform.position + forward * _bulletModel.ProjectSpeed * _bulletModel.ProjectLifetime;
             _tween = transform.DOMove(newPos, _bulletModel.ProjectLifetime).SetEase(Ease.Linear);
@@ -50,7 +51,6 @@ namespace GameUnits
         {
             _inPool = true;
             _tween?.Kill();
-            _trailRenderer.Clear();
             Pool.ReturnToPool(this);
         }
 

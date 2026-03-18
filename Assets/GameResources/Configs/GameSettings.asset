@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: Assembly-CSharp::UnitsConfig
   _unitModels:
-  - _maxHp: 150
+  - _maxHp: 100
     _modelType: 0
     _collisionDamage: 20
     _unitPrefab: {fileID: 3084562519942267600, guid: df777687f76176445b28acb722d8c6d2, type: 3}
@@ -34,7 +34,7 @@ MonoBehaviour:
       _bulletPrefab: {fileID: 4272590811791952769, guid: 61ed03b8b411ad64693436a9e6c9f064, type: 3}
     _turretId: 0
   _defaultLevelModel:
-    _distance: 300
+    _distance: 100
     _enemyTypes: 01000000
     _startCount: 2
-    _enemyDelay: 3
+    _enemyDelay: 2.5

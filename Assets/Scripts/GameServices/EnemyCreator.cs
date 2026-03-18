@@ -143,14 +143,9 @@ namespace GameServices
             return true;
         }
 
-        public void Stop()
+        private void Resume()
         {
-            ManagePaused(false);
-        }
-
-        public void Resume()
-        {
-            ManagePaused(true, false);
+            ManagePaused(false, false);
         }
 
         private void SpawnEnemies()
@@ -174,12 +169,14 @@ namespace GameServices
         private void OnGameResult(GameResultEvent gameResultEvent)
         {
             Clear();
-            Stop();
+            ManagePaused(true);
         }
         
         private void OnPauseResult(PauseEvent pauseEvent)
         {
-            Stop();
+            if (pauseEvent.IsPause) 
+                ManagePaused(true);
+            else Resume();
         }
 
         private void Restart(RestartEvent restartEvent)

@@ -12,6 +12,7 @@ namespace UI
         [SerializeField] private TMP_Text _winText;
         [SerializeField] private TMP_Text _loseText;
         [SerializeField] private Button _repeatButton;
+        [SerializeField] private CanvasGroup _canvasGroup;
         
         private IEventBus _eventBus;
 
@@ -40,14 +41,16 @@ namespace UI
 
         private void ShowResult(bool win)
         {
-            gameObject.SetActive(true);
+            _canvasGroup.alpha = 1f;
+            _canvasGroup.blocksRaycasts = true;
             _loseText.gameObject.SetActive(!win);
             _winText.gameObject.SetActive(win);
         }
 
         private void StartGame()
         {
-            gameObject.SetActive(false);
+            _canvasGroup.alpha = 0f;
+            _canvasGroup.blocksRaycasts = false;
             _eventBus.Publish<RestartEvent>(new RestartEvent());
         }
     }

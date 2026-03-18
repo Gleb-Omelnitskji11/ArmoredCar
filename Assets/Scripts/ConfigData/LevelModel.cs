@@ -10,7 +10,7 @@ namespace ConfigData
         [SerializeField] private float _distance;
         [SerializeField] private UnitType[] _enemyTypes;
         [SerializeField] private int _startCount;
-        [SerializeField] private int _enemyDelay;
+        [SerializeField] private float _enemyDelay;
     
         public float Distance => _distance;
         public int StartEnemyCount => _startCount;
