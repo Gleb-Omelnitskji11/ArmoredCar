@@ -14,7 +14,7 @@ namespace GameServices
         [SerializeField] private float _zEnemyMinDistance = 6f;
         [SerializeField] private float _spawnEnemyDelay = 2f;
         
-        private UnitsConfig _unitsConfig;
+        private GameConfig _gameConfig;
         private PlayerCar _playerCar;
         private IEventBus _eventBus;
 
@@ -26,14 +26,14 @@ namespace GameServices
         [Inject]
         public void Construct(ConfigProvider configProvider, PlayerCar playerCar, IEventBus eventBus)
         {
-            _unitsConfig = configProvider.UnitConfig;
+            _gameConfig = configProvider.GameConfig;
             _playerCar = playerCar;
             _eventBus = eventBus;
         }
 
         private void Start()
         {
-            _currentEnemyModel = _unitsConfig.GetUnitModel(UnitType.Enemy1);
+            _currentEnemyModel = _gameConfig.GetUnitModel(UnitType.Enemy1);
             _carTransform = _playerCar.transform;
             SetPrefab(_currentEnemyModel.UnitPrefab);
 
@@ -78,9 +78,9 @@ namespace GameServices
 
         private void SetLevel()
         {
-            initialSize = _unitsConfig.GetDefaultLevelModel.StartEnemyCount;
-            _spawnEnemyDelay = _unitsConfig.GetDefaultLevelModel.EnemyDelay;
-            _currentEnemyModel = _unitsConfig.GetUnitModel(UnitType.Enemy1);
+            initialSize = _gameConfig.GetDefaultLevelModel.StartEnemyCount;
+            _spawnEnemyDelay = _gameConfig.GetDefaultLevelModel.EnemyDelay;
+            _currentEnemyModel = _gameConfig.GetUnitModel(UnitType.Enemy1);
         }
 
         private void ManagePaused(bool isPaused, bool resetTimer = true)
@@ -161,7 +161,7 @@ namespace GameServices
             {
                 if (!enemy._inPool && enemy.Monobehaviour.transform.position.z <= carPos.z - _enemyRemoveDistance)
                 {
-                    enemy.Monobehaviour.GetComponent<ChaseEnemy>().TurnOff();
+                    enemy.Monobehaviour.GetComponent<ChaseEnemy>().ReturnToPool();
                 }
             }
         }

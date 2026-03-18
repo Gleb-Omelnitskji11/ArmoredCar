@@ -15,17 +15,15 @@ namespace UI
         [SerializeField] private TMP_Text _timerText;
         [SerializeField] private int _seconds;
         
-        private LevelLoader _levelLoader;
         private float _timer;
         private Tween _timerTween;
         private CancellationTokenSource _cts;
         private IEventBus _eventBus;
 
         [Inject]
-        public void Construct(LevelLoader levelLoader, IEventBus eventBus)
+        public void Construct(IEventBus eventBus)
         {
             _eventBus = eventBus;
-            _levelLoader = levelLoader;
         }
 
         private void Start()

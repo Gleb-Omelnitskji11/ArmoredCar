@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace ConfigData
 {
-    [CreateAssetMenu(fileName = "UnitsConfig", menuName = "ScriptableObjects/UnitsConfig", order = 0)]
-    public class UnitsConfig : ScriptableObject
+    [CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObjects/UnitsConfig", order = 0)]
+    public class GameConfig : ScriptableObject
     {
         [SerializeField] private UnitModel[] _unitModels = new UnitModel[2];
         [SerializeField] private TurretModel[] _turretModels = new TurretModel[1];

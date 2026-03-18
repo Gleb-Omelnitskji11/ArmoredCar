@@ -2,10 +2,9 @@ using GameServices;
 using GameUnits;
 using UI;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
-namespace Core
+namespace Core.Installer
 {
     public class GameInstaller : MonoInstaller
     {
@@ -15,7 +14,7 @@ namespace Core
         [SerializeField] private LevelLoader _levelLoader;
         [SerializeField] private CameraController _cameraController;
         [SerializeField] private PlayerInputProvider _playerInputProvider;
-        [FormerlySerializedAs("_progresBar")] [SerializeField] private ProgressBar _progressBar;
+        [SerializeField] private ProgressBar _progressBar;
     
         public override void InstallBindings()
         {

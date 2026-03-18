@@ -28,7 +28,6 @@ namespace UI
             }
 
             _fillerImage.color = _hpStates[i - 1].Color;
-            //_bgImage.color = _hpStates[i - 1].Color;
         }
 
         [Serializable]

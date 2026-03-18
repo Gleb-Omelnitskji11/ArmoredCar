@@ -40,7 +40,7 @@ namespace UI
         private void Update()
         {
             if (_paused) return;
-            float progress = ((_carTransform.position.z - _startZ) / (_level.Distance - _startZ)) * 100;
+            float progress = ((_carTransform.position.z - _startZ) / _level.Distance) * 100;
             _progressBar.value = progress;
             if (_progress != (int)progress)
             {

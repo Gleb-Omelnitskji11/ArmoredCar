@@ -11,15 +11,13 @@ namespace UI
     {
         [SerializeField] private Button _resumeButton;
         [SerializeField] private Button _restartButton;
-        private LevelLoader _levelLoader;
         private IEventBus _eventBus;
 
 
         [Inject]
-        public void Construct(LevelLoader levelLoader, IEventBus eventBus)
+        public void Construct(IEventBus eventBus)
         {
             _eventBus = eventBus;
-            _levelLoader = levelLoader;
         }
 
         private void Start()

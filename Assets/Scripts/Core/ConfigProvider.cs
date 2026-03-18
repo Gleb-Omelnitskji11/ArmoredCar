@@ -1,17 +1,18 @@
 using ConfigData;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Core
 {
     public class ConfigProvider : MonoBehaviour
     {
-        [SerializeField] private UnitsConfig _unitConfig;
+        [FormerlySerializedAs("_unitConfig")] [SerializeField] private GameConfig _gameConfig;
 
         private void Start()
         {
             DontDestroyOnLoad(this);
         }
 
-        public UnitsConfig UnitConfig => _unitConfig;
+        public GameConfig GameConfig => _gameConfig;
     }
 }

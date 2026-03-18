@@ -20,6 +20,7 @@ namespace GameUnits
         private Vector3 _carPosition;
         private Sequence _seq;
         private IEventBus _eventBus;
+        private LevelModel _level;
 
         [Inject]
         public void Construct(IEventBus eventBus)
@@ -27,8 +28,9 @@ namespace GameUnits
             _eventBus = eventBus;
         }
 
-        public void InitUnit(UnitModel model, TurretModel turretModel)
+        public void InitUnit(UnitModel model, TurretModel turretModel, LevelModel level)
         {
+            _level = level;
             base.InitUnit(model);
             _turret.Init(turretModel);
             _hpBar.Init(model.MaxHp);
@@ -48,8 +50,8 @@ namespace GameUnits
 
         private void UpdateDirection()
         {
-            float newZ = transform.position.z + 9999f;
-            float duration = 9999f / _unitModel.Speed;
+            float newZ = _level.Distance + transform.position.z;
+            float duration = _level.Distance / _unitModel.Speed;
             _seq = DOTween.Sequence();
             _seq.Join(transform.DOMoveZ(newZ, duration))
                 .SetEase(Ease.Linear);

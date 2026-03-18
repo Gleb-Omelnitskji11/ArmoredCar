@@ -20,7 +20,7 @@ namespace GameUnits
 
         public override void Died()
         {
-            TurnOff();
+            ReturnToPool();
         }
     
         public virtual void OnTriggerEnter(Collider other)
@@ -35,7 +35,7 @@ namespace GameUnits
             }
         }
 
-        public void TurnOff()
+        public void ReturnToPool()
         {
             _inPool = true;
             Pool.ReturnToPool(this);

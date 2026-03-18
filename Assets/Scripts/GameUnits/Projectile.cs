@@ -31,7 +31,7 @@ namespace GameUnits
             _tween?.Kill();
             Vector3 newPos = transform.position + forward * _bulletModel.ProjectSpeed * _bulletModel.ProjectLifetime;
             _tween = transform.DOMove(newPos, _bulletModel.ProjectLifetime).SetEase(Ease.Linear);
-            _tween.OnComplete(TurnOff);
+            _tween.OnComplete(ReturnToPool);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -43,11 +43,11 @@ namespace GameUnits
                     enemy.TakeDamage(_bulletModel.DamageShoot);
                 }
 
-                TurnOff();
+                ReturnToPool();
             }
         }
 
-        public void TurnOff()
+        public void ReturnToPool()
         {
             _inPool = true;
             _tween?.Kill();

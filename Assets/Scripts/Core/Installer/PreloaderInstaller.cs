@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
-namespace Core
+namespace Core.Installer
 {
     public class PreloaderInstaller : MonoBehaviour
     {

@@ -13,7 +13,7 @@ namespace GameServices
         [SerializeField] private Vector3 _carStartPos = new Vector3(0, 0.5f, -48.6f);
 
         private PlayerCar _car;
-        private UnitsConfig _unitsConfig;
+        private GameConfig _gameConfig;
 
         private ProgressBar _progressBar;
         private IEventBus _eventBus;
@@ -26,7 +26,7 @@ namespace GameServices
             _eventBus = eventBus;
             _progressBar = progressBar;
             _car = playerCar;
-            _unitsConfig = configProvider.UnitConfig;
+            _gameConfig = configProvider.GameConfig;
         }
 
         private void Start()
@@ -47,16 +47,16 @@ namespace GameServices
         {
             IsPaused = false;
             ResetCar();
-            _progressBar.Setup(_unitsConfig.GetDefaultLevelModel, _carStartPos.z);
+            _progressBar.Setup(_gameConfig.GetDefaultLevelModel, _carStartPos.z);
             _car.StartLevel();
         }
 
         private void ResetCar()
         {
             _car.transform.position = _carStartPos;
-            var carModel = _unitsConfig.GetUnitModel(UnitType.Player);
-            var turretModel = _unitsConfig.GetTurretModel(0);
-            _car.InitUnit(carModel, turretModel);
+            var carModel = _gameConfig.GetUnitModel(UnitType.Player);
+            var turretModel = _gameConfig.GetTurretModel(0);
+            _car.InitUnit(carModel, turretModel, _gameConfig.GetDefaultLevelModel);
         }
 
         private void OnLose()
