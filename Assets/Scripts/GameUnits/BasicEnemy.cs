@@ -1,28 +1,49 @@
 using ConfigData;
 using Core;
-using GameServices;
+using Core.ObjectPool;
 using UnityEngine;
 
 namespace GameUnits
 {
     public class BasicEnemy : Unit, IPooledObject
     {
-        public GameObject Monobehaviour => gameObject;
-        public bool _inPool { get; protected set; }
-        public ObjectPool Pool { get; protected set; }
-        public void InitUnit(UnitModel model, ObjectPool objectPool)
+        private const float EnemyRemoveDistance = 5f;
+        protected Transform Player;
+        private EnemyUnitModel _enemyUnitModel;
+
+        public string PoolKey { get; protected set; }
+        public bool IsActive { get; protected set; }
+        public IObjectPooler Pooler { get; protected set; }
+        public EnemyType EnemyType => _enemyUnitModel.EnemyType;
+
+        public virtual void InitEnemyModel(EnemyUnitModel model, Transform carTransform)
         {
-            base.InitUnit(model);
-        
-            Pool = objectPool;
-            _inPool = true;
+            InitUnit(model.UnitModel);
+            _enemyUnitModel = model;
+            Player = carTransform;
         }
 
-        public override void Died()
+        protected override void Died()
         {
-            ReturnToPool();
+            Deactivate();
         }
-    
+
+        public void Update()
+        {
+            OnUpdate();
+        }
+
+        protected virtual void OnUpdate()
+        {
+            if (!IsActive) return;
+            if (IsFar()) Deactivate();
+        }
+
+        protected bool IsFar()
+        {
+            return transform.position.z <= Player.position.z - EnemyRemoveDistance;
+        }
+
         public virtual void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag(Constants.Player))
@@ -35,10 +56,23 @@ namespace GameUnits
             }
         }
 
-        public void ReturnToPool()
+        public void SetPoolData(IObjectPooler pooler, string poolKey)
         {
-            _inPool = true;
-            Pool.ReturnToPool(this);
+            PoolKey = poolKey;
+            Pooler = pooler;
+        }
+
+        public void Deactivate()
+        {
+            IsActive = false;
+            Pooler.Release(PoolKey, this);
+            gameObject.SetActive(false);
+        }
+
+        public void Activate()
+        {
+            IsActive = true;
+            Reset();
         }
     }
 }

@@ -21,7 +21,8 @@ namespace GameServices
         public bool IsPaused { get; private set; } = true;
 
         [Inject]
-        public void Construct(PlayerCar playerCar, ConfigProvider configProvider, ProgressBar progressBar, IEventBus eventBus)
+        public void Construct(PlayerCar playerCar, ConfigProvider configProvider, ProgressBar progressBar,
+            IEventBus eventBus)
         {
             _eventBus = eventBus;
             _progressBar = progressBar;
@@ -43,7 +44,7 @@ namespace GameServices
             _eventBus.Unsubscribe<PauseEvent>(OnPause);
         }
 
-        public void Restart(RestartEvent restartEvent)
+        private void Restart(RestartEvent restartEvent)
         {
             IsPaused = false;
             ResetCar();
@@ -54,9 +55,9 @@ namespace GameServices
         private void ResetCar()
         {
             _car.transform.position = _carStartPos;
-            var carModel = _gameConfig.GetUnitModel(UnitType.Player);
+            var carModel = _gameConfig.GetPlayerUnitModel(CarType.Model1);
             var turretModel = _gameConfig.GetTurretModel(0);
-            _car.InitUnit(carModel, turretModel, _gameConfig.GetDefaultLevelModel);
+            _car.InitUnit(carModel.UnitModel, turretModel, _gameConfig.GetDefaultLevelModel);
         }
 
         private void OnLose()

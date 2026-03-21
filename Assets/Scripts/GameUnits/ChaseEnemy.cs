@@ -1,5 +1,4 @@
 using ConfigData;
-using GameServices;
 using UnityEngine;
 
 namespace GameUnits
@@ -10,24 +9,32 @@ namespace GameUnits
 
         [SerializeField] private float _agroDistance = 10f;
         [SerializeField] private float _moveSpeed = 4f;
-        
+
         [SerializeField] private Animator _animator;
         [SerializeField] private Transform _rotateTransform;
 
         private Transform _player;
         private bool _isChasing;
 
-        public void InitUnit(UnitModel model, ObjectPool objectPool, Transform carTransform)
+        public override void InitEnemyModel(EnemyUnitModel model, Transform carTransform)
         {
-            base.InitUnit(model, objectPool);
+            base.InitEnemyModel(model, carTransform);
+            SetIdle();
+        }
 
-            _player = carTransform;
+        public override void Reset()
+        {
+            base.Reset();
             _isChasing = false;
             SetIdle();
         }
 
-        private void Update()
+        protected override void OnUpdate()
         {
+            if (!IsActive) return;
+
+            if (IsFar()) Deactivate();
+
             float sqrDistance = (_player.position - transform.position).sqrMagnitude;
 
             if (!_isChasing && sqrDistance <= _agroDistance * _agroDistance)
@@ -69,7 +76,7 @@ namespace GameUnits
             _rotateTransform.localRotation = Quaternion.LookRotation(localDirection);
         }
 
-        public override void Died()
+        protected override void Died()
         {
             SetIdle();
             base.Died();

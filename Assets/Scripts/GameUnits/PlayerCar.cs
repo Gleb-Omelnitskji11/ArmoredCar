@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using ConfigData;
 using Core;
@@ -51,7 +50,7 @@ namespace GameUnits
         private void UpdateDirection()
         {
             float newZ = _level.Distance + transform.position.z;
-            float duration = _level.Distance / _unitModel.Speed;
+            float duration = _level.Distance / UnitModel.Speed;
             _seq = DOTween.Sequence();
             _seq.Join(transform.DOMoveZ(newZ, duration))
                 .SetEase(Ease.Linear);
@@ -67,7 +66,7 @@ namespace GameUnits
             base.TakeDamage(damageTaken);
         }
 
-        public override void Died()
+        protected override void Died()
         {
             GameResultEvent gameResultEvent = new GameResultEvent(false);
             _eventBus.Publish<GameResultEvent>(gameResultEvent);

@@ -1,18 +1,20 @@
+using Core.ObjectPool;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace Core.Installer
 {
-    public class PreloaderInstaller : MonoBehaviour
+    public class PreloaderInstaller : MonoInstaller<PreloaderInstaller>
     {
         [SerializeField] private ConfigProvider _configProvider;
-    
-        private void Start()
+        public override void InstallBindings()
         {
-            StaticContext.Container.Bind<ConfigProvider>().FromInstance(_configProvider).AsSingle();
-            StaticContext.Container.Bind<IEventBus>().To<EventBus>().AsSingle();
-            GoToGame();
+            DiContainer container = StaticContext.Container;
+            container.Bind<ConfigProvider>().FromInstance(_configProvider).AsSingle();
+            container.Bind<IEventBus>().To<EventBus>().AsSingle();
+            container.Bind<IObjectPooler>().To<ObjectPooler>().AsSingle();
+            Invoke(nameof(GoToGame), 0.5f);
         }
 
         private void GoToGame()

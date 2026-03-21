@@ -1,4 +1,3 @@
-using System;
 using ConfigData;
 using UI;
 using UnityEngine;
@@ -7,39 +6,40 @@ namespace GameUnits
 {
     public abstract class Unit : MonoBehaviour
     {
-        [SerializeField] protected Transform _unitTransform;
-        [SerializeField] protected int _currentHp;
         [SerializeField] protected HpBar _hpBar;
     
-        protected UnitModel _unitModel;
+        protected int CurrentHp;
+        protected UnitModel UnitModel;
 
-        public virtual void InitUnit(UnitModel model)
+        public void InitUnit(UnitModel model)
         {
-            _unitModel = model;
-            _currentHp = _unitModel.MaxHp;
-            _hpBar.Init(_unitModel.MaxHp);
+            UnitModel = model;
+            Reset();
         }
 
-        public int GetCollisionDamage() => _unitModel.CollisionDamage;
+        public virtual void Reset()
+        {
+            CurrentHp = UnitModel.MaxHp;
+            _hpBar.Init(UnitModel.MaxHp);
+        }
+
+        protected int GetCollisionDamage() => UnitModel.CollisionDamage;
 
         public virtual void TakeDamage(int damage)
         {
-            _currentHp = Mathf.Max(0, _currentHp - damage);
-            _hpBar.UpdateState(_currentHp);
-            if (_currentHp <= 0)
+            CurrentHp = Mathf.Max(0, CurrentHp - damage);
+            _hpBar.UpdateState(CurrentHp);
+            if (CurrentHp <= 0)
             {
-                OnDied?.Invoke();
                 Died();
             }
         }
 
         protected void TakeLethalDamage()
         {
-            TakeDamage(_currentHp);
+            TakeDamage(CurrentHp);
         }
 
-        public abstract void Died();
-    
-        public event Action OnDied;
+        protected abstract void Died();
     }
 }

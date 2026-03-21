@@ -5,17 +5,19 @@ using UnityEngine;
 namespace ConfigData
 {
     [Serializable]
-    public class BulletModel
+    public class ProjectaleModel
     {
         [SerializeField] private int _damageShoot;
         [SerializeField] private float _projectSpeed;
         [SerializeField] private float _projectLifetime;
-        [SerializeField] private Projectile _bulletPrefab;
+        [SerializeField] private ProjectileType _projectileType;
+        [SerializeField] private BasicProjectile _bulletPrefab;
 
         public int DamageShoot => _damageShoot;
         public float ProjectSpeed => _projectSpeed;
         public float ProjectLifetime => _projectLifetime;
 
-        public Projectile BulletPrefab => _bulletPrefab;
+        public BasicProjectile BulletPrefab => _bulletPrefab;
+        public ProjectileType ProjectileType => _projectileType;
     }
 }

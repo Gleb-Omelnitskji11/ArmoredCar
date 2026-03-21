@@ -8,7 +8,7 @@ namespace Core.Installer
 {
     public class GameInstaller : MonoInstaller
     {
-        [SerializeField] private EnemyCreator _enemyCreator;
+        [SerializeField] private EnemySpawner _enemySpawner;
         [SerializeField] private GroundsController _groundsController;
         [SerializeField] private PlayerCar _player;
         [SerializeField] private LevelLoader _levelLoader;
@@ -19,12 +19,14 @@ namespace Core.Installer
         public override void InstallBindings()
         {
             Container.Bind<PlayerCar>().FromInstance(_player).AsCached();
+            Container.Bind<ProjectileSpawner>().AsCached();
             Container.Bind<GroundsController>().FromInstance(_groundsController).AsCached();
             Container.Bind<CameraController>().FromInstance(_cameraController).AsCached();
-            Container.Bind<EnemyCreator>().FromInstance(_enemyCreator).AsCached();
+            Container.Bind<EnemySpawner>().FromInstance(_enemySpawner).AsCached();
             Container.Bind<LevelLoader>().FromInstance(_levelLoader).AsCached();
             Container.Bind<IInputProvider>().FromInstance(_playerInputProvider).AsCached();
             Container.Bind<ProgressBar>().FromInstance(_progressBar).AsCached();
+            
         }
     }
 }

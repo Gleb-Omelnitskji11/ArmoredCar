@@ -1,37 +1,63 @@
 using System;
+using GameUnits;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ConfigData
 {
     [CreateAssetMenu(fileName = "GameConfig", menuName = "ScriptableObjects/UnitsConfig", order = 0)]
     public class GameConfig : ScriptableObject
     {
-        [SerializeField] private UnitModel[] _unitModels = new UnitModel[2];
+        [SerializeField] private PlayerUnitModel[] _playerUnits = new PlayerUnitModel[1];
         [SerializeField] private TurretModel[] _turretModels = new TurretModel[1];
+        [SerializeField] private EnemyUnitModel[] _enemyModels = new EnemyUnitModel[2];
+        [SerializeField] private ProjectaleModel[] _projectileModels= new ProjectaleModel[1];
         [SerializeField] private LevelModel _defaultLevelModel;
     
         public LevelModel GetDefaultLevelModel => _defaultLevelModel;
 
-        public UnitModel GetUnitModel(UnitType unitType)
+        public PlayerUnitModel GetPlayerUnitModel(CarType carType)
         {
-            foreach (var unit in _unitModels)
+            foreach (var car in _playerUnits)
             {
-                if (unit.ModelType == unitType)
-                    return unit;
+                if(car.CarType == carType)
+                    return car;
             }
-        
-            throw new Exception("No unit model found");
+            
+            throw new Exception($"No car found for car type {carType}");
         }
-    
-        public TurretModel GetTurretModel(int id)
+        
+        public EnemyUnitModel GetEnemyUnitModel(EnemyType enemyType)
+        {
+            foreach (var enemy in _enemyModels)
+            {
+                if(enemy.EnemyType == enemyType)
+                    return enemy;
+            }
+            
+            throw new Exception($"No enemy found for enemy type {enemyType}");
+        }
+        
+        public TurretModel GetTurretModel(TurretType turretType)
         {
             foreach (var turret in _turretModels)
             {
-                if (turret.TurretId == id)
+                if(turret.TurretType == turretType)
                     return turret;
             }
+            
+            throw new Exception($"No turret found for type {turretType}");
+        }    
         
-            throw new Exception("No turret model found");
+        public ProjectaleModel GetProjectileModel(ProjectileType projectileType)
+        {
+            foreach (var projectile in _projectileModels)
+            {
+                if(projectile.ProjectileType == projectileType)
+                    return projectile;
+            }
+            
+            throw new Exception($"No projectile found for type {projectileType}");
         }
     }
 }

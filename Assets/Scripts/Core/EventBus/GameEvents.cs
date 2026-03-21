@@ -12,6 +12,12 @@ namespace Core.BusEvents
     
     public class RestartEvent : IEvent
     {
+        public bool IsFirstGame;
+
+        public RestartEvent(bool isFirstGame = false)
+        {
+            IsFirstGame = isFirstGame;
+        }
     }
     
     public class PauseEvent : IEvent

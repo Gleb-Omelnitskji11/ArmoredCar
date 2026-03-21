@@ -1,4 +1,5 @@
 using System;
+using GameUnits;
 using UnityEngine;
 
 namespace ConfigData
@@ -6,18 +7,18 @@ namespace ConfigData
     [Serializable]
     public class TurretModel
     {
+        [SerializeField] private Turret _turretView;
         [SerializeField] private float _fireDelay;
         [SerializeField] private float _damageShoot;
-
         [SerializeField] private float _rotationSpeed;
 
-        [SerializeField] private BulletModel[] _bulletModels;
-        [SerializeField] private int _turretId;
+        [SerializeField] private ProjectileType _projectileType;
+        [SerializeField] private TurretType _turretType;
 
         public float FireDelay => _fireDelay;
 
         public float RotationSpeed => _rotationSpeed;
-        public BulletModel[] BulletPrefab => _bulletModels;
-        public int TurretId => _turretId;
+        public ProjectileType ProjectileTypes => _projectileType;
+        public TurretType TurretType => _turretType;
     }
 }

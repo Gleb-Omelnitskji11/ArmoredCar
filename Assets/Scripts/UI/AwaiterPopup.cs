@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core;
 using Core.BusEvents;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using GameServices;
 using TMPro;
@@ -38,7 +39,7 @@ namespace UI
             _cts?.Dispose();
         }
 
-        private async Task StartCountdown(CancellationToken token)
+        private async UniTask StartCountdown(CancellationToken token)
         {
             for (int i = _seconds; i > 0; i--)
             {
@@ -50,15 +51,15 @@ namespace UI
             StartGame();
         }
 
-        private async Task WaitOneSecond(CancellationToken token)
+        private async UniTask WaitOneSecond(CancellationToken token)
         {
-            await Task.Delay(1000, cancellationToken: token);
+            await UniTask.Delay(1000, cancellationToken: token);
         }
 
         private void StartGame()
         {
             gameObject.SetActive(false);
-            _eventBus.Publish<RestartEvent>(new RestartEvent());
+            _eventBus.Publish<RestartEvent>(new RestartEvent(true));
         }
     }
 }

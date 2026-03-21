@@ -436,9 +436,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3c51abd284213443be725c4e29012dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyCreator
-  initialSize: 10
-  _parentObject: {fileID: 332098587}
-  _enemyRemoveDistance: 8
   _enemyOffSet: {x: 4, y: 0, z: 45}
   _zEnemyMinDistance: 18
   _spawnEnemyDelay: 2
@@ -1118,7 +1115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abc41c3decde3164f9edc9574c8cd80b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameInstaller
-  _enemyCreator: {fileID: 332098588}
+  _enemySpawner: {fileID: 332098588}
   _groundsController: {fileID: 1325839382}
   _player: {fileID: 5623167060657129109}
   _levelLoader: {fileID: 1720234002}
@@ -1718,7 +1715,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2359115599278470997, guid: 4c89f34328c17bf4da961d95f1f4bb8c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -46.049988
+      value: -46.05005
       objectReference: {fileID: 0}
     - target: {fileID: 2359115599278470997, guid: 4c89f34328c17bf4da961d95f1f4bb8c, type: 3}
       propertyPath: m_AnchoredPosition.y

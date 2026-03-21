@@ -1,13 +1,15 @@
-using GameServices;
-using UnityEngine;
+using Core.ObjectPool;
 
 namespace GameUnits
 {
     public interface IPooledObject
     {
-        public bool _inPool { get;}
-        public ObjectPool Pool { get;}
-        public void ReturnToPool();
-        public GameObject Monobehaviour { get;}
+        public bool IsActive { get;}
+        public string PoolKey { get;}
+        public IObjectPooler Pooler { get;}
+        public void SetPoolData(IObjectPooler pooler, string poolKey);
+
+        public void Deactivate();
+        public void Activate();
     }
 }
