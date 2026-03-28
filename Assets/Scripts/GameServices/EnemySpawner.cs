@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using ConfigData;
 using Core;
 using Core.BusEvents;
@@ -25,6 +25,7 @@ namespace GameServices
         private LevelModel _levelModel;
         private IObjectPooler _pooler;
         private int _initialSize;
+        private List<BasicEnemy> _enemies = new List<BasicEnemy>();
 
         [Inject]
         public void Construct(IObjectPooler pooler, ConfigProvider configProvider, PlayerCar playerCar, IEventBus eventBus)
@@ -89,24 +90,34 @@ namespace GameServices
         {
             foreach (EnemyType type in _levelModel.EnemyTypes)
             {
-                EnemyUnitModel model = _gameConfig.GetEnemyUnitModel(type);
+                EnemyModel model = _gameConfig.GetEnemyUnitModel(type);
                 string key = GetKey(type);
-
-                _pooler.CreatePool(key, model.EnemyPrefab, factory: CreateNewEnemyObj,
+                _pooler.CreatePool<BasicEnemy, EnemyModel>(key, model, factory: CreateNewEnemyObj,
                     onGet: OnGetFromPool, onRelease: OnRealiseToPool,
                     prewarmCount: 0);
             }
         }
+
+        private BasicEnemy CreateNewEnemyObj(EnemyModel model)
+        {
+            BasicEnemy enemy = Instantiate(model.EnemyPrefab);
+            EnemyType enemyType = model.EnemyType;
+            string key = GetKey(enemyType);
+            enemy.SetPoolData(_pooler, key);
+            enemy.InitEnemyModel(model.UnitModel, _playerCar.transform);
+            return enemy;
+        }
         
         private void OnGetFromPool(BasicEnemy enemy)
         {
+            _enemies.Add(enemy);
             enemy.gameObject.SetActive(true);
             enemy.Reset();
         }
 
         private void OnRealiseToPool(BasicEnemy enemy)
         {
-            
+            _enemies.Remove(enemy);
         }
         
         private string GetKey(EnemyType type) => $"Enemy_{type}";
@@ -122,6 +133,10 @@ namespace GameServices
         {
             _isPaused = isPaused;
             if (resetTimer) _timer = 0f;
+            foreach (var enemy in _enemies)
+            {
+                enemy.PauseChanged(isPaused);
+            }
         }
 
         private void SetNearestEnemies()
@@ -132,23 +147,12 @@ namespace GameServices
             }
         }
 
-        private BasicEnemy CreateNewEnemyObj(BasicEnemy prefab)
-        {
-            BasicEnemy enemy = Instantiate(prefab);
-            EnemyType enemyType = prefab.EnemyType;
-            string key = GetKey(enemyType);
-            EnemyUnitModel unitModel = _gameConfig.GetEnemyUnitModel(enemyType);
-            enemy.SetPoolData(_pooler, key);
-            enemy.InitEnemyModel(unitModel, _playerCar.transform);
-            return enemy;
-        }
-
         private void SpawnNewEnemy()
         {
             EnemyType enemyType = GetRandomEnemyType();
             Vector3 pos = GetRandomPosition();
             string key = GetKey(enemyType);
-            var enemy = _pooler.Get<BasicEnemy>(key);
+            BasicEnemy enemy = _pooler.Get<BasicEnemy, EnemyModel>(key);
             enemy.transform.position = pos;
         }
 
@@ -167,11 +171,6 @@ namespace GameServices
             Vector3 pos = new Vector3(xRandom, _enemyOffSet.y, carPos.z + zRandom);
             return pos;
         }
-
-        private void Resume()
-        {
-            ManagePaused(false, false);
-        }
         
         private void OnGameResult(GameResultEvent gameResultEvent)
         {
@@ -186,8 +185,8 @@ namespace GameServices
         private void OnPauseResult(PauseEvent pauseEvent)
         {
             if (pauseEvent.IsPause) 
-                ManagePaused(true);
-            else Resume();
+                ManagePaused(true, false);
+            else ManagePaused(false, false);
         }
 
         private void Restart(RestartEvent restartEvent)

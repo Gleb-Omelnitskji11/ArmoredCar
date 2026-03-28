@@ -28,17 +28,17 @@ MonoBehaviour:
     _turretType: 0
   _enemyModels:
   - _enemyPrefab: {fileID: 8701517307825256404, guid: 84c8f7a849341f74d991943e67caa3d8, type: 3}
-    _enemyType: 0
     _unitModel:
       _maxHp: 15
       _collisionDamage: 30
       _speed: 0
+      _type: 0
   - _enemyPrefab: {fileID: 345648326565005039, guid: c0eb7040a51fb104495683ddbdb5184f, type: 3}
-    _enemyType: 1
     _unitModel:
       _maxHp: 20
       _collisionDamage: 20
       _speed: 2
+      _type: 1
   _projectileModels:
   - _damageShoot: 15
     _projectSpeed: 20

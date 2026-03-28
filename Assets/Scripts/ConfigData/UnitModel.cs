@@ -14,4 +14,11 @@ namespace ConfigData
         public int CollisionDamage => _collisionDamage;
         public float Speed => _speed;
     }
+
+    [Serializable]
+    public class EnemyUnitModel : UnitModel
+    {
+        [SerializeField] private EnemyType _type;
+        public EnemyType EnemyType => _type;
+    }
 }

@@ -49,7 +49,7 @@ namespace GameServices
         public T SpawnBullet<T>() where T : BasicProjectile
         {
             string key = GetKey(_projectileType);
-            var enemy = _pooler.Get<BasicProjectile>(key);
+            BasicProjectile enemy = _pooler.Get<BasicProjectile, ProjectaleModel>(key);
             return enemy as T;
         }
 
@@ -78,18 +78,17 @@ namespace GameServices
             ProjectaleModel model = _gameConfig.GetProjectileModel(_projectileType);
             string key = GetKey(_projectileType);
 
-            _pooler.CreatePool(key, model.BulletPrefab, factory: CreateNewProjectileObj,
+            _pooler.CreatePool<BasicProjectile, ProjectaleModel>(key, model, factory: CreateNewProjectileObj,
                 onGet: OnGetFromPool, onRelease: OnRealiseToPool,
                 prewarmCount: 0);
         }
         
-        private BasicProjectile CreateNewProjectileObj(BasicProjectile prefab)
+        private BasicProjectile CreateNewProjectileObj(ProjectaleModel model)
         {
-            BasicProjectile projectile = GameObject.Instantiate(prefab);
-            ProjectileType projectileType = prefab.ProjectileType;
+            BasicProjectile projectile = GameObject.Instantiate(model.BulletPrefab);
+            ProjectileType projectileType = model.ProjectileType;
             string key = GetKey(projectileType);
-            ProjectaleModel projectaleModel = _gameConfig.GetProjectileModel(projectileType);
-            projectile.SetProjectileModel(projectaleModel);
+            projectile.SetProjectileModel(model);
             projectile.SetPoolData(_pooler, key);
             return projectile;
         }

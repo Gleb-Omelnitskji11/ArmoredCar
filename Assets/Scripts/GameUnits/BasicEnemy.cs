@@ -9,18 +9,23 @@ namespace GameUnits
     {
         private const float EnemyRemoveDistance = 5f;
         protected Transform Player;
-        private EnemyUnitModel _enemyUnitModel;
+        protected EnemyUnitModel EnemyModel;
 
         public string PoolKey { get; protected set; }
         public bool IsActive { get; protected set; }
         public IObjectPooler Pooler { get; protected set; }
-        public EnemyType EnemyType => _enemyUnitModel.EnemyType;
+        public EnemyType EnemyType => EnemyModel.EnemyType;
 
         public virtual void InitEnemyModel(EnemyUnitModel model, Transform carTransform)
         {
-            InitUnit(model.UnitModel);
-            _enemyUnitModel = model;
+            InitUnit(model);
+            EnemyModel = model;
             Player = carTransform;
+        }
+
+        public virtual void PauseChanged(bool paused)
+        {
+            IsActive = paused;
         }
 
         protected override void Died()
@@ -65,7 +70,7 @@ namespace GameUnits
         public void Deactivate()
         {
             IsActive = false;
-            Pooler.Release(PoolKey, this);
+            Pooler.Release<BasicEnemy, EnemyModel>(PoolKey, this);
             gameObject.SetActive(false);
         }
 

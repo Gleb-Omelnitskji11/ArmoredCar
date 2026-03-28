@@ -1,7 +1,5 @@
 using System;
-using GameUnits;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace ConfigData
 {
@@ -10,7 +8,7 @@ namespace ConfigData
     {
         [SerializeField] private PlayerUnitModel[] _playerUnits = new PlayerUnitModel[1];
         [SerializeField] private TurretModel[] _turretModels = new TurretModel[1];
-        [SerializeField] private EnemyUnitModel[] _enemyModels = new EnemyUnitModel[2];
+        [SerializeField] private EnemyModel[] _enemyModels = new EnemyModel[2];
         [SerializeField] private ProjectaleModel[] _projectileModels= new ProjectaleModel[1];
         [SerializeField] private LevelModel _defaultLevelModel;
     
@@ -27,7 +25,7 @@ namespace ConfigData
             throw new Exception($"No car found for car type {carType}");
         }
         
-        public EnemyUnitModel GetEnemyUnitModel(EnemyType enemyType)
+        public EnemyModel GetEnemyUnitModel(EnemyType enemyType)
         {
             foreach (var enemy in _enemyModels)
             {

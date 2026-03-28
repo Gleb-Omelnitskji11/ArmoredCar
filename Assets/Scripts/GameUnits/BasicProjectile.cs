@@ -26,7 +26,7 @@ namespace GameUnits
         public virtual void Deactivate()
         {
             IsActive = false;
-            Pooler.Release(PoolKey, this);
+            Pooler.Release<BasicProjectile, ProjectaleModel>(PoolKey, this);
             gameObject.SetActive(false);
         }
 
