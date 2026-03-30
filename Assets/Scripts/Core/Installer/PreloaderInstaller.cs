@@ -1,3 +1,4 @@
+using System.Collections;
 using Core.ObjectPool;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,7 +20,12 @@ namespace Core.Installer
 
         private void GoToGame()
         {
-            SceneManager.LoadScene(Constants.GameScene);
+            StartCoroutine(GoToGameCoroutine());
+        }
+
+        private IEnumerator GoToGameCoroutine()
+        {
+            yield return SceneManager.LoadSceneAsync(Constants.GameScene);
         }
     }
 }
