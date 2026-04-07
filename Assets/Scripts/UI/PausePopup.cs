@@ -10,9 +10,9 @@ namespace UI
     {
         [SerializeField] private Button _resumeButton;
         [SerializeField] private Button _restartButton;
+        [SerializeField] private Button _quitButton;
         private IEventBus _eventBus;
-
-
+        
         [Inject]
         public void Construct(IEventBus eventBus)
         {
@@ -23,6 +23,14 @@ namespace UI
         {
             _resumeButton.onClick.AddListener(Resume);
             _restartButton.onClick.AddListener(Restart);
+            _quitButton.onClick.AddListener(Exit);
+        }
+
+        private void OnDestroy()
+        {
+            _resumeButton.onClick.RemoveAllListeners();
+            _restartButton.onClick.RemoveAllListeners();
+            _quitButton.onClick.RemoveAllListeners();
         }
 
         public void Show()
@@ -46,6 +54,11 @@ namespace UI
         {
             gameObject.SetActive(false);
             _eventBus.Publish<RestartEvent>(new RestartEvent());
+        }
+
+        private void Exit()
+        {
+            Application.Quit();
         }
     }
 }

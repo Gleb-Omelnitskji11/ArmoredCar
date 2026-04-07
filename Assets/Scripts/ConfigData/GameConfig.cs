@@ -10,9 +10,13 @@ namespace ConfigData
         [SerializeField] private TurretModel[] _turretModels = new TurretModel[1];
         [SerializeField] private EnemyModel[] _enemyModels = new EnemyModel[2];
         [SerializeField] private ProjectaleModel[] _projectileModels= new ProjectaleModel[1];
+        [SerializeField] private LevelModel[] _levelModels = new LevelModel[0];
         [SerializeField] private LevelModel _defaultLevelModel;
-    
-        public LevelModel GetDefaultLevelModel => _defaultLevelModel;
+
+        public LevelModel GetLevelModel(int level)
+        {
+            return _levelModels.Length <= level ? _defaultLevelModel : _levelModels[level];
+        }
 
         public PlayerUnitModel GetPlayerUnitModel(CarType carType)
         {

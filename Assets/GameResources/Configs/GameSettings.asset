@@ -45,8 +45,9 @@ MonoBehaviour:
     _projectLifetime: 5
     _projectileType: 0
     _bulletPrefab: {fileID: 4272590811791952769, guid: 61ed03b8b411ad64693436a9e6c9f064, type: 3}
+  _levelModels: []
   _defaultLevelModel:
     _distance: 300
     _enemyTypes: 0000000001000000
-    _startCount: 2
-    _enemyDelay: 2.5
+    _startCount: 3
+    _enemyDelay: 1.5

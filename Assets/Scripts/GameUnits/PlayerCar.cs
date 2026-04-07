@@ -19,7 +19,7 @@ namespace GameUnits
         private Vector3 _carPosition;
         private Sequence _seq;
         private IEventBus _eventBus;
-        private LevelModel _level;
+        private float _goalZ;
 
         [Inject]
         public void Construct(IEventBus eventBus)
@@ -27,38 +27,35 @@ namespace GameUnits
             _eventBus = eventBus;
         }
 
-        public void InitUnit(UnitModel model, TurretModel turretModel, LevelModel level)
+        public void InitUnit(UnitModel model, TurretModel turretModel)
         {
-            _level = level;
             base.InitUnit(model);
             _turret.Init(turretModel);
             _hpBar.Init(model.MaxHp);
         }
 
-        public void StartLevel()
+        public void StartLevel(LevelModel levelModel)
         {
             foreach (var trail in _trails)
             {
                 trail.Clear();
             }
-            
+
             _seq?.Kill();
-            UpdateDirection();
+            UpdateDirection(levelModel.Distance);
             _turret.Activate();
         }
 
-        private void UpdateDirection()
+        public void Stop()
         {
-            float newZ = _level.Distance + transform.position.z;
-            float duration = _level.Distance / UnitModel.Speed;
-            _seq = DOTween.Sequence();
-            _seq.Join(transform.DOMoveZ(newZ, duration))
-                .SetEase(Ease.Linear);
-            foreach (var wheel in _wheels)
-            {
-                _seq.Join(wheel.DORotate(new Vector3(360f, 0f, 0f), 2f, RotateMode.FastBeyond360));
-            }
-            _seq.OnComplete(UpdateDirection);
+            _seq?.Pause();
+            _turret.Stop();
+        }
+
+        public void Resume()
+        {
+            _seq.Play();
+            _turret.Activate();
         }
 
         public override void TakeDamage(int damageTaken)
@@ -73,10 +70,16 @@ namespace GameUnits
             Stop();
         }
 
-        public void Stop()
+        private void UpdateDirection(float distance)
         {
-            _seq?.Kill();
-            _turret.Stop();
+            _goalZ = distance + transform.position.z;
+            float duration = distance / UnitModel.Speed;
+            _seq = DOTween.Sequence();
+            _seq.Join(transform.DOMoveZ(_goalZ, duration).SetEase(Ease.Linear));
+            foreach (var wheel in _wheels)
+            {
+                _seq.Join(wheel.DORotate(new Vector3(360f, 0f, 0f), 2f, RotateMode.FastBeyond360));
+            }
         }
     }
 }

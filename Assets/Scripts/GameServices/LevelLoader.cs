@@ -17,13 +17,14 @@ namespace GameServices
 
         private ProgressBar _progressBar;
         private IEventBus _eventBus;
-
-        public bool IsPaused { get; private set; } = true;
+        private PlayerPrefsSaver _prefsSaver;
+        private LevelModel _level;
 
         [Inject]
         public void Construct(PlayerCar playerCar, ConfigProvider configProvider, ProgressBar progressBar,
-            IEventBus eventBus)
+            IEventBus eventBus, PlayerPrefsSaver prefsSaver)
         {
+            _prefsSaver = prefsSaver;
             _eventBus = eventBus;
             _progressBar = progressBar;
             _car = playerCar;
@@ -46,18 +47,20 @@ namespace GameServices
 
         private void Restart(RestartEvent restartEvent)
         {
-            IsPaused = false;
+            _level = _gameConfig.GetLevelModel(_prefsSaver.CurrentLevel);
             ResetCar();
-            _progressBar.Setup(_gameConfig.GetDefaultLevelModel, _carStartPos.z);
-            _car.StartLevel();
+            _progressBar.Setup(_level, _carStartPos.z);
+            _car.StartLevel(_level);
         }
 
         private void ResetCar()
         {
             _car.transform.position = _carStartPos;
-            var carModel = _gameConfig.GetPlayerUnitModel(CarType.Model1);
-            var turretModel = _gameConfig.GetTurretModel(0);
-            _car.InitUnit(carModel.UnitModel, turretModel, _gameConfig.GetDefaultLevelModel);
+            var carData = _prefsSaver.CarData;
+            var carModel = _gameConfig.GetPlayerUnitModel(carData.CarType);
+            var turretModel = _gameConfig.GetTurretModel(carData.TurretType);
+            
+            _car.InitUnit(carModel.UnitModel, turretModel);
         }
 
         private void OnLose()
@@ -85,14 +88,12 @@ namespace GameServices
 
         private void Pause()
         {
-            IsPaused = true;
             _car.Stop();
         }
 
         private void Resume()
         {
-            IsPaused = false;
-            _car.StartLevel();
+            _car.Resume();
         }
     }
 }

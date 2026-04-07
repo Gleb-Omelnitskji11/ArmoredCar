@@ -1,36 +1,40 @@
 using System.Threading;
-using System.Threading.Tasks;
 using Core;
 using Core.BusEvents;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using GameServices;
 using TMPro;
 using UnityEngine;
 using Zenject;
 
 namespace UI
 {
-    public class AwaiterPopup : MonoBehaviour
+    public class LevelLoadingPopup : MonoBehaviour
     {
         [SerializeField] private TMP_Text _timerText;
+        [SerializeField] private TMP_Text _levelText;
         [SerializeField] private int _seconds;
-        
+
         private float _timer;
+        private const string LevelFormat = "{0} Level";
+        
         private Tween _timerTween;
         private CancellationTokenSource _cts;
         private IEventBus _eventBus;
+        private PlayerPrefsSaver _playerPrefs;
 
         [Inject]
-        public void Construct(IEventBus eventBus)
+        public void Construct(IEventBus eventBus, PlayerPrefsSaver playerPrefs)
         {
+            _playerPrefs = playerPrefs;
             _eventBus = eventBus;
         }
-
+        
         private void Start()
         {
             _cts = new CancellationTokenSource();
-            StartCountdown(_cts.Token);
+            StartCountdown().Forget();
+            _levelText.text = string.Format(LevelFormat, _playerPrefs.CurrentLevel);
         }
 
         private void OnDestroy()
@@ -39,25 +43,28 @@ namespace UI
             _cts?.Dispose();
         }
 
-        private async UniTask StartCountdown(CancellationToken token)
+        private async UniTask StartCountdown()
         {
             for (int i = _seconds; i > 0; i--)
             {
                 _timerText.text = i.ToString();
-                await WaitOneSecond(token);
+                await WaitOneSecond();
             }
-
+            
             _timerText.text = "0";
             StartGame();
         }
 
-        private async UniTask WaitOneSecond(CancellationToken token)
+        private async UniTask WaitOneSecond()
         {
-            await UniTask.Delay(1000, cancellationToken: token);
+            await UniTask.Delay(1000, cancellationToken: _cts.Token);
         }
 
         private void StartGame()
         {
+            if (_cts.Token.IsCancellationRequested)
+                return;
+            
             gameObject.SetActive(false);
             _eventBus.Publish<RestartEvent>(new RestartEvent(true));
         }

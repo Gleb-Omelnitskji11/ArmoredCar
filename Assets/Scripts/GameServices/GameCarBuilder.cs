@@ -7,7 +7,7 @@ using Zenject;
 
 namespace GameServices
 {
-    public class PlayerBuilder : MonoBehaviour
+    public class GameCarBuilder : MonoBehaviour
     {
         [SerializeField] private Vector3 _carStartPos = new Vector3(0, 0.5f, -48.6f);
         

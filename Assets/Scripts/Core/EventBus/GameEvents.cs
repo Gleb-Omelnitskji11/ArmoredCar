@@ -1,8 +1,10 @@
+using ConfigData;
+
 namespace Core.BusEvents
 {
     public class GameResultEvent : IEvent
     {
-        public bool IsWin;
+        public readonly bool IsWin;
 
         public GameResultEvent(bool isWin)
         {
@@ -12,7 +14,7 @@ namespace Core.BusEvents
     
     public class RestartEvent : IEvent
     {
-        public bool IsFirstGame;
+        public readonly bool IsFirstGame;
 
         public RestartEvent(bool isFirstGame = false)
         {
@@ -22,11 +24,21 @@ namespace Core.BusEvents
     
     public class PauseEvent : IEvent
     {
-        public bool IsPause;
+        public readonly bool IsPause;
 
         public PauseEvent(bool isPause)
         {
             IsPause = isPause;
+        }
+    }
+
+    public class EnemyDiedEvent : IEvent
+    {
+        public readonly EnemyType EnemyType;
+
+        public EnemyDiedEvent(EnemyType enemyType)
+        {
+            EnemyType = enemyType;
         }
     }
 }

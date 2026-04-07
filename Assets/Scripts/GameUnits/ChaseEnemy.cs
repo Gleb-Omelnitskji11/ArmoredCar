@@ -13,7 +13,6 @@ namespace GameUnits
         [SerializeField] private Animator _animator;
         [SerializeField] private Transform _rotateTransform;
 
-        private Transform _player;
         private bool _isChasing;
 
         public override void InitEnemyModel(EnemyUnitModel model, Transform carTransform)
@@ -33,10 +32,13 @@ namespace GameUnits
         {
             if (!IsActive) return;
 
-            if (IsFar()) Deactivate();
+            if (IsFar())
+            {
+                Deactivate();
+                return;
+            }
 
-            float sqrDistance = (_player.position - transform.position).sqrMagnitude;
-
+            float sqrDistance = (Player.position - transform.position).sqrMagnitude;
             if (!_isChasing && sqrDistance <= _agroDistance * _agroDistance)
             {
                 StartChase();
@@ -62,7 +64,7 @@ namespace GameUnits
 
         private void MoveToPlayer()
         {
-            Vector3 direction = _player.position - transform.position;
+            Vector3 direction = Player.position - transform.position;
             direction.y = 0;
 
             if (direction.sqrMagnitude < 0.01f)

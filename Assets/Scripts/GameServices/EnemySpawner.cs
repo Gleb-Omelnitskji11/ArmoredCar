@@ -26,10 +26,12 @@ namespace GameServices
         private IObjectPooler _pooler;
         private int _initialSize;
         private List<BasicEnemy> _enemies = new List<BasicEnemy>();
+        private PlayerPrefsSaver _prefsSaver;
 
         [Inject]
-        public void Construct(IObjectPooler pooler, ConfigProvider configProvider, PlayerCar playerCar, IEventBus eventBus)
+        public void Construct(IObjectPooler pooler, ConfigProvider configProvider, PlayerCar playerCar, IEventBus eventBus, PlayerPrefsSaver prefsSaver)
         {
+            _prefsSaver = prefsSaver;
             _pooler = pooler;
             _gameConfig = configProvider.GameConfig;
             _playerCar = playerCar;
@@ -113,20 +115,23 @@ namespace GameServices
             _enemies.Add(enemy);
             enemy.gameObject.SetActive(true);
             enemy.Reset();
+            enemy.Activate();
         }
 
         private void OnRealiseToPool(BasicEnemy enemy)
         {
             _enemies.Remove(enemy);
+            _eventBus.Publish<EnemyDiedEvent>(new EnemyDiedEvent(enemy.EnemyType));
         }
         
         private string GetKey(EnemyType type) => $"Enemy_{type}";
 
         private void SetLevel()
         {
-            _initialSize = _gameConfig.GetDefaultLevelModel.StartEnemyCount;
-            _spawnEnemyDelay = _gameConfig.GetDefaultLevelModel.EnemyDelay;
-            _levelModel = _gameConfig.GetDefaultLevelModel;
+            var level = _gameConfig.GetLevelModel(_prefsSaver.CurrentLevel);
+            _initialSize = level.StartEnemyCount;
+            _spawnEnemyDelay = level.EnemyDelay;
+            _levelModel = level;
         }
 
         private void ManagePaused(bool isPaused, bool resetTimer = true)
