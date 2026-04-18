@@ -1,6 +1,7 @@
 using ConfigData;
 using Core;
 using Core.ObjectPool;
+using Firebase.Analytics;
 using UnityEngine;
 
 namespace GameUnits
@@ -15,6 +16,7 @@ namespace GameUnits
         public bool IsActive { get; protected set; }
         public IObjectPooler Pooler { get; protected set; }
         public EnemyType EnemyType => EnemyModel.EnemyType;
+        public EnemyUnitModel EnemyUnitModel => EnemyModel;
 
         public virtual void InitEnemyModel(EnemyUnitModel model, Transform carTransform)
         {

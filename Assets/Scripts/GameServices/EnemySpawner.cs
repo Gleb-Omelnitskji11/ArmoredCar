@@ -121,7 +121,7 @@ namespace GameServices
         private void OnRealiseToPool(BasicEnemy enemy)
         {
             _enemies.Remove(enemy);
-            _eventBus.Publish<EnemyDiedEvent>(new EnemyDiedEvent(enemy.EnemyType));
+            _eventBus.Publish<EnemyDiedEvent>(new EnemyDiedEvent(enemy.EnemyUnitModel));
         }
         
         private string GetKey(EnemyType type) => $"Enemy_{type}";

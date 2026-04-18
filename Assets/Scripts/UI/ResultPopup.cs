@@ -1,5 +1,6 @@
 using Core;
 using Core.BusEvents;
+using Firebase.Analytics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

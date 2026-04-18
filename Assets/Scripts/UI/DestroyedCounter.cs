@@ -1,5 +1,6 @@
 using Core;
 using Core.BusEvents;
+using GameServices;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -12,11 +13,13 @@ namespace UI
         
         private IEventBus _eventBus;
         private int _counter;
+        private AchieveAnalytic _achieveAnalytic;
         private const string Format = "{0} destroyed";
 
         [Inject]
-        public void Construct(IEventBus eventBus)
+        public void Construct(IEventBus eventBus, AchieveAnalytic achieveAnalytic)
         {
+            _achieveAnalytic = achieveAnalytic;
             _eventBus = eventBus;
         }
 
@@ -40,8 +43,9 @@ namespace UI
 
         private void OnEnemyDied(EnemyDiedEvent enemyDiedEvent)
         {
-            _counter++;
+            _counter += enemyDiedEvent.EnemyModel.Points;
             UpdateText();
+            _achieveAnalytic.AddEnemyDied(_counter);
         }
 
         private void UpdateText()

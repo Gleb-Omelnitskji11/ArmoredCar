@@ -26,7 +26,7 @@ namespace Core.Installer
             Container.Bind<LevelLoader>().FromInstance(_levelLoader).AsCached();
             Container.Bind<IInputProvider>().FromInstance(_playerInputProvider).AsCached();
             Container.Bind<ProgressBar>().FromInstance(_progressBar).AsCached();
-            
+            Container.Bind<AchieveAnalytic>().AsCached();
         }
     }
 }

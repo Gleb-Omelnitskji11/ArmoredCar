@@ -19,6 +19,8 @@ namespace ConfigData
     public class EnemyUnitModel : UnitModel
     {
         [SerializeField] private EnemyType _type;
+        [SerializeField] private int _points = 1;
         public EnemyType EnemyType => _type;
+        public int Points => _points;
     }
 }

@@ -34,11 +34,11 @@ namespace Core.BusEvents
 
     public class EnemyDiedEvent : IEvent
     {
-        public readonly EnemyType EnemyType;
+        public readonly EnemyUnitModel EnemyModel;
 
-        public EnemyDiedEvent(EnemyType enemyType)
+        public EnemyDiedEvent(EnemyUnitModel enemyModel)
         {
-            EnemyType = enemyType;
+            EnemyModel = enemyModel;
         }
     }
 }
