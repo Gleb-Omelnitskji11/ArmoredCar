@@ -1,7 +1,5 @@
 <dependencies>
   <packages>
-    <package>com.adjust.sdk:adjust-android:5.5.0</package>
-    <package>com.android.installreferrer:installreferrer:2.2</package>
     <package>com.google.android.gms:play-services-base:18.10.0</package>
     <package>com.google.firebase:firebase-analytics:23.0.0</package>
     <package>com.google.firebase:firebase-analytics-unity:13.9.0</package>
