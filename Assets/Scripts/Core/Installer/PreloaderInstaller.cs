@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using Core.ObjectPool;
 using Firebase;
+using GameServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -12,6 +13,7 @@ namespace Core.Installer
     public class PreloaderInstaller : MonoInstaller<PreloaderInstaller>
     {
         [SerializeField] private ConfigProvider _configProvider;
+        [SerializeField] private AdjustAnalytic _adjustAnalytic;
 
         public override void InstallBindings()
         {
@@ -21,6 +23,8 @@ namespace Core.Installer
             container.Bind<IObjectPooler>().To<ObjectPooler>().AsSingle();
             container.Bind<PlayerPrefsSaver>().AsSingle()
                 .OnInstantiated<PlayerPrefsSaver>((ctx, foo) => foo.Initialize()).NonLazy();
+            container.Bind<FirebaseAnalytic>().AsSingle().NonLazy();
+            container.Bind<AdjustAnalytic>().FromInstance(_adjustAnalytic).AsSingle();
             Invoke(nameof(GoToGame), 0.5f);
         }
 

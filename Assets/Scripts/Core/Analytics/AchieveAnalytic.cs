@@ -9,10 +9,12 @@ namespace GameServices
         private const string DestroyedProgressKey = "DestroyedProgress";
         private int _currentProgress = -1;
         private FirebaseAnalytic _firebaseAnalytic;
+        private AdjustAnalytic _adjustAnalytic;
 
-        public AchieveAnalytic()
+        public AchieveAnalytic(AdjustAnalytic adjustAnalytic, FirebaseAnalytic firebaseAnalytic)
         {
-            _firebaseAnalytic = new FirebaseAnalytic();
+            _adjustAnalytic = adjustAnalytic;
+            _firebaseAnalytic = firebaseAnalytic;
         }
 
         public void AddEnemyDied(int points)
@@ -32,6 +34,7 @@ namespace GameServices
             {
                 EnemiesPoints?.Invoke(points);
                 _firebaseAnalytic.SendEnemyDiedEvent(points);
+                _adjustAnalytic.SendEnemyDiedEvent(points);
                 PlayerPrefs.SetInt(DestroyedProgressKey, ++_currentProgress);
             }
         }
