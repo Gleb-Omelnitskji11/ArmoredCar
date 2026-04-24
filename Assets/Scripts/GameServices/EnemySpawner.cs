@@ -26,12 +26,12 @@ namespace GameServices
         private IObjectPooler _pooler;
         private int _initialSize;
         private List<BasicEnemy> _enemies = new List<BasicEnemy>();
-        private PlayerPrefsSaver _prefsSaver;
+        private PlayerProgressSaver _progressSaver;
 
         [Inject]
-        public void Construct(IObjectPooler pooler, ConfigProvider configProvider, PlayerCar playerCar, IEventBus eventBus, PlayerPrefsSaver prefsSaver)
+        public void Construct(IObjectPooler pooler, ConfigProvider configProvider, PlayerCar playerCar, IEventBus eventBus, PlayerProgressSaver progressSaver)
         {
-            _prefsSaver = prefsSaver;
+            _progressSaver = progressSaver;
             _pooler = pooler;
             _gameConfig = configProvider.GameConfig;
             _playerCar = playerCar;
@@ -128,7 +128,7 @@ namespace GameServices
 
         private void SetLevel()
         {
-            var level = _gameConfig.GetLevelModel(_prefsSaver.CurrentLevel);
+            var level = _gameConfig.GetLevelModel(_progressSaver.CurrentLevel);
             _initialSize = level.StartEnemyCount;
             _spawnEnemyDelay = level.EnemyDelay;
             _levelModel = level;

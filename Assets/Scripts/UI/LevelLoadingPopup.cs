@@ -21,12 +21,12 @@ namespace UI
         private Tween _timerTween;
         private CancellationTokenSource _cts;
         private IEventBus _eventBus;
-        private PlayerPrefsSaver _playerPrefs;
+        private PlayerProgressSaver _playerProgress;
 
         [Inject]
-        public void Construct(IEventBus eventBus, PlayerPrefsSaver playerPrefs)
+        public void Construct(IEventBus eventBus, PlayerProgressSaver playerProgress)
         {
-            _playerPrefs = playerPrefs;
+            _playerProgress = playerProgress;
             _eventBus = eventBus;
         }
         
@@ -34,7 +34,7 @@ namespace UI
         {
             _cts = new CancellationTokenSource();
             StartCountdown().Forget();
-            _levelText.text = string.Format(LevelFormat, _playerPrefs.CurrentLevel);
+            _levelText.text = string.Format(LevelFormat, _playerProgress.CurrentLevel);
         }
 
         private void OnDestroy()

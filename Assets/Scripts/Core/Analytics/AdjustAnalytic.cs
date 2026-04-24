@@ -15,18 +15,27 @@ namespace GameServices
 
         private void Start()
         {
+            DontDestroyOnLoad(this);
+        }
+
+        public void Init()
+        {
+#if UNITY_EDITOR
+            return;
+#endif
             AdjustConfig adjustConfig = new AdjustConfig(_appToken, AdjustEnvironment.Sandbox);
 
-            adjustConfig.LogLevel = AdjustLogLevel.Verbose;
+            adjustConfig.LogLevel = AdjustLogLevel.Info;
             adjustConfig.IsDeferredDeeplinkOpeningEnabled = true;
             adjustConfig.IsSendingInBackgroundEnabled = true;
             Adjust.InitSdk(adjustConfig);
-            
-            DontDestroyOnLoad(this);
         }
 
         public void SendEnemyDiedEvent(int points)
         {
+#if UNITY_EDITOR
+            return;
+#endif
             string eventName = "enemy_destroyed";
             AdjustEvent adjustEvent = new AdjustEvent(_adjustTokens.GetValueOrDefault(eventName));
             adjustEvent.AddCallbackParameter("points:", points.ToString());

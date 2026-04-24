@@ -17,14 +17,14 @@ namespace GameServices
 
         private ProgressBar _progressBar;
         private IEventBus _eventBus;
-        private PlayerPrefsSaver _prefsSaver;
+        private PlayerProgressSaver _progressSaver;
         private LevelModel _level;
 
         [Inject]
         public void Construct(PlayerCar playerCar, ConfigProvider configProvider, ProgressBar progressBar,
-            IEventBus eventBus, PlayerPrefsSaver prefsSaver)
+            IEventBus eventBus, PlayerProgressSaver progressSaver)
         {
-            _prefsSaver = prefsSaver;
+            _progressSaver = progressSaver;
             _eventBus = eventBus;
             _progressBar = progressBar;
             _car = playerCar;
@@ -47,7 +47,7 @@ namespace GameServices
 
         private void Restart(RestartEvent restartEvent)
         {
-            _level = _gameConfig.GetLevelModel(_prefsSaver.CurrentLevel);
+            _level = _gameConfig.GetLevelModel(_progressSaver.CurrentLevel);
             ResetCar();
             _progressBar.Setup(_level, _carStartPos.z);
             _car.StartLevel(_level);
@@ -56,7 +56,7 @@ namespace GameServices
         private void ResetCar()
         {
             _car.transform.position = _carStartPos;
-            var carData = _prefsSaver.CarData;
+            var carData = _progressSaver.CarData;
             var carModel = _gameConfig.GetPlayerUnitModel(carData.CarType);
             var turretModel = _gameConfig.GetTurretModel(carData.TurretType);
             

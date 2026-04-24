@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using ConfigData;
 using Core.BusEvents;
 using UnityEngine;
 using Zenject;
 
 namespace Core
 {
-    public class PlayerPrefsSaver : IInitializable, IDisposable
+    public class PlayerProgressSaver : IInitializable, IDisposable
     {
         private PlayerData _playerData;
         private IEventBus _eventBus;
@@ -16,7 +14,7 @@ namespace Core
         public CarData CarData => _playerData.CurrentCar;
         public int CurrentLevel => _playerData.CurrentLevel;
 
-        public PlayerPrefsSaver(IEventBus eventBus)
+        public PlayerProgressSaver(IEventBus eventBus)
         {
             _eventBus = eventBus;
         }
@@ -79,7 +77,7 @@ namespace Core
 
         private void CompleteLevel(GameResultEvent resultEvent)
         {
-            if(resultEvent.IsWin)
+            if (resultEvent.IsWin)
             {
                 _playerData.CurrentLevel++;
                 SavePlayerData();

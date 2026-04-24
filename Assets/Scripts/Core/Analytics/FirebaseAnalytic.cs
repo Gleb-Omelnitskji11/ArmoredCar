@@ -4,6 +4,8 @@ namespace GameServices
 {
     public class FirebaseAnalytic
     {
+        
+        
         public void SendEnemyDiedEvent(int points)
         {
             Parameter[] parameters = new Parameter[1];
