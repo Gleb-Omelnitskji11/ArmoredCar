@@ -10,6 +10,26 @@ namespace UI
         [SerializeField] private Image _fillerImage;
         [SerializeField] private Image _bgImage;
         [SerializeField] private HpState[] _hpStates;
+        
+        public bool LookAtCamera;
+        private Camera _mainCamera;
+        private Transform _transform;
+
+        private void Start()
+        {
+            _mainCamera = Camera.main;
+            _transform = transform;
+        }
+
+        private void Update()
+        {
+            if(!LookAtCamera) return;
+            
+            //_transform.LookAt(_mainCamera.transform);
+            var camPosition = _mainCamera.transform.position;
+            Vector3 lookPos = new Vector3(transform.position.x, camPosition.y,  camPosition.z) ;
+            transform.LookAt(lookPos);
+        }
     
         public void Init(int max)
         {
