@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GameServices;
 using GoogleMobileAds.Api;
 using UnityEngine;
 
@@ -64,6 +65,8 @@ namespace Core.Ads
 
         public void ShowInterstitial()
         {
+            //AdjustInitialization.CheckStatus();
+            FirebaseInitialization.CheckStatus();
             if (_interstitialAd != null && _interstitialAd.CanShowAd())
             {
                 Debug.Log("Showing interstitial ad.");

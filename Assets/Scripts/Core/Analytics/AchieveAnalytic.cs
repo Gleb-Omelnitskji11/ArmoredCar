@@ -36,6 +36,7 @@ namespace GameServices
                 _firebaseAnalytic.SendEnemyDiedEvent(points);
                 _adjustAnalytic.SendEnemyDiedEvent(points);
                 PlayerPrefs.SetInt(DestroyedProgressKey, ++_currentProgress);
+                PlayerPrefs.Save();
             }
         }
 

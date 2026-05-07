@@ -36,14 +36,14 @@ namespace Preloader
         private async void GoToGame()
         {
             InitAd();
-            IntPlayerPrefs();
+            InitPlayerPrefs();
             InitAdjust();
 
-            if (await InitFirebase())
+            if (await FirebaseInitialization.InitFirebase())
             {
                 StartCoroutine(GoToGameCoroutine());
             }
-            else Debug.LogError($"{nameof(InitFirebase)} failed");
+            else Debug.LogError($"{nameof(FirebaseInitialization)} failed");
         }
 
         private IEnumerator GoToGameCoroutine()
@@ -51,41 +51,14 @@ namespace Preloader
             yield return SceneManager.LoadSceneAsync(Constants.GameScene);
         }
 
-        private async Task<bool> InitFirebase()
-        {
-            try
-            {
-                DependencyStatus dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
-
-                if (dependencyStatus == DependencyStatus.Available)
-                {
-                    FirebaseApp firebaseApp = FirebaseApp.DefaultInstance;
-
-                    Debug.Log("Firebase init success!");
-                    return true;
-                }
-                else
-                {
-                    Debug.LogError($"Could not resolve all Firebase dependencies: {dependencyStatus}");
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Exception during trying init firebase: {ex}");
-            }
-
-            return false;
-        }
-
-        private void IntPlayerPrefs()
+        private void InitPlayerPrefs()
         {
             _playerProgressSaver.Initialize();
         }
 
         private void InitAdjust()
         {
-            _adjustAnalytic.Init();
+            //AdjustInitialization.Init();
         }
 
         private void InitAd()
