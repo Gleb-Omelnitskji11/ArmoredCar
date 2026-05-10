@@ -6,6 +6,7 @@ namespace GameUnits
     public class ChaseEnemy : BasicEnemy
     {
         private static readonly int Chase = Animator.StringToHash("Chase");
+        private static readonly int Agro = Animator.StringToHash("Agro");
 
         [SerializeField] private float _agroDistance = 10f;
         [SerializeField] private float _moveSpeed = 4f;
@@ -38,10 +39,13 @@ namespace GameUnits
                 return;
             }
 
-            float sqrDistance = (Player.position - transform.position).sqrMagnitude;
-            if (!_isChasing && sqrDistance <= _agroDistance * _agroDistance)
+            if (!_isChasing)
             {
-                StartChase();
+                float sqrDistance = (Player.position - transform.position).sqrMagnitude;
+                if (sqrDistance <= _agroDistance * _agroDistance)
+                {
+                    StartChase();
+                }
             }
 
             if (_isChasing)
@@ -50,10 +54,27 @@ namespace GameUnits
             }
         }
 
+        public override void PauseChanged(bool paused)
+        {
+            base.PauseChanged(paused);
+            _animator.speed = IsActive ? 1f : 0f;
+        }
+
+        public override void TakeDamage(int damage)
+        {
+            base.TakeDamage(damage);
+            if (IsActive && !_isChasing)
+            {
+                StartChase();
+            }
+        }
+
         private void StartChase()
         {
             _isChasing = true;
             _animator.SetBool(Chase, true);
+            if(_animator.GetCurrentAnimatorStateInfo(0).tagHash != Agro)
+                _animator.Play(Agro);
         }
 
         private void SetIdle()

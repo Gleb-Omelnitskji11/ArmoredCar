@@ -15,7 +15,6 @@ namespace GameUnits
         public string PoolKey { get; protected set; }
         public bool IsActive { get; protected set; }
         public IObjectPooler Pooler { get; protected set; }
-        public EnemyType EnemyType => EnemyModel.EnemyType;
         public EnemyUnitModel EnemyUnitModel => EnemyModel;
 
         public virtual void InitEnemyModel(EnemyUnitModel model, Transform carTransform)
@@ -27,7 +26,7 @@ namespace GameUnits
 
         public virtual void PauseChanged(bool paused)
         {
-            IsActive = paused;
+            IsActive = !paused;
         }
 
         protected override void Died()
@@ -71,8 +70,8 @@ namespace GameUnits
 
         public void Deactivate()
         {
-            IsActive = false;
             Pooler.Release<BasicEnemy, EnemyModel>(PoolKey, this);
+            IsActive = false;
             gameObject.SetActive(false);
         }
 

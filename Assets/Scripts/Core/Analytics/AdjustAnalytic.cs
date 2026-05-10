@@ -18,9 +18,9 @@ namespace GameServices
 
         public void SendEnemyDiedEvent(int points)
         {
-//#if UNITY_EDITOR
+#if UNITY_EDITOR
             return;
-//#endif
+#endif
             string eventName = "enemy_destroyed";
             AdjustEvent adjustEvent = new AdjustEvent(_adjustTokens.GetValueOrDefault(eventName));
             adjustEvent.AddCallbackParameter("points:", points.ToString());

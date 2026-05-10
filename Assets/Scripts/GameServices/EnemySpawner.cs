@@ -81,10 +81,9 @@ namespace GameServices
         
         private void RealiseAll()
         {
-            foreach (EnemyType type in _levelModel.EnemyTypes)
+            while (_enemies.Count > 0)
             {
-                string key = GetKey(type);
-                _pooler.Clear(key);
+                _enemies[0].Deactivate();
             }
         }
         
@@ -120,8 +119,10 @@ namespace GameServices
 
         private void OnRealiseToPool(BasicEnemy enemy)
         {
+            enemy.Reset();
             _enemies.Remove(enemy);
-            _eventBus.Publish<EnemyDiedEvent>(new EnemyDiedEvent(enemy.EnemyUnitModel));
+            if(!_isPaused)
+                _eventBus.Publish<EnemyDiedEvent>(new EnemyDiedEvent(enemy.EnemyUnitModel));
         }
         
         private string GetKey(EnemyType type) => $"Enemy_{type}";
@@ -180,11 +181,6 @@ namespace GameServices
         private void OnGameResult(GameResultEvent gameResultEvent)
         {
             ManagePaused(true);
-            foreach (var enemyType in _levelModel.EnemyTypes)
-            {
-                string key = GetKey(enemyType);
-                _pooler.Clear(key);
-            }
         }
         
         private void OnPauseResult(PauseEvent pauseEvent)
