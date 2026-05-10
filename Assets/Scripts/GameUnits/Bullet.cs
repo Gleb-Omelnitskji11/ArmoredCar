@@ -21,6 +21,19 @@ namespace GameUnits
             _tween = transform.DOMove(newPos, ProjectileModel.ProjectLifetime).SetEase(Ease.Linear);
             _tween.OnComplete(Deactivate);
         }
+        
+        public override void Deactivate()
+        {
+            base.Deactivate();
+            _tween?.Kill();
+        }
+        
+        public override void Pause(bool pause)
+        {
+            base.Pause(pause);
+            if (pause) _tween?.Pause();
+            else _tween?.Play();
+        }
 
         private void OnTriggerEnter(Collider other)
         {

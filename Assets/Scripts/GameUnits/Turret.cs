@@ -25,8 +25,6 @@ namespace GameUnits
         {
             _input = input;
             _projectileSpawner = projectileSpawner;
-            
-            _projectileSpawner.Subscribe();
         }
 
         public void Init(TurretModel model)
@@ -68,8 +66,8 @@ namespace GameUnits
         protected virtual void Shot()
         {
             Bullet bullet = _projectileSpawner.SpawnBullet<Bullet>();
-            bullet.Reset();
             bullet.transform.position = _bulletSpawnPoint.position;
+            bullet.transform.rotation = transform.rotation;
             bullet.Activate();
             bullet.StartMovement(_bulletSpawnPoint.forward);
         }

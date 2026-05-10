@@ -18,7 +18,7 @@ namespace GameServices
         private ProjectileType _projectileType;
         private IEventBus _eventBus;
         
-        private List<BasicProjectile> _projectiles = new List<BasicProjectile>();
+        private readonly List<BasicProjectile> _projectiles = new List<BasicProjectile>();
 
         [Inject]
         public void Construct(IObjectPooler pooler, ConfigProvider configProvider, IEventBus eventBus)
@@ -26,17 +26,19 @@ namespace GameServices
             _eventBus = eventBus;
             _pooler = pooler;
             _gameConfig = configProvider.GameConfig;
+
+            Subscribe();
         }
         
-        public void Subscribe()
+        private void Subscribe()
         {
-            _eventBus.Subscribe<GameResultEvent>(ClearPool);
+            _eventBus.Subscribe<RestartEvent>(DeactivateAll);
             _eventBus.Subscribe<PauseEvent>(OnPause);
         }
         
         ~ProjectileSpawner()
         {
-            _eventBus.Unsubscribe<GameResultEvent>(ClearPool);
+            _eventBus.Unsubscribe<RestartEvent>(DeactivateAll);
             _eventBus.Unsubscribe<PauseEvent>(OnPause);
         }
 
@@ -49,8 +51,8 @@ namespace GameServices
         public T SpawnBullet<T>() where T : BasicProjectile
         {
             string key = GetKey(_projectileType);
-            BasicProjectile enemy = _pooler.Get<BasicProjectile, ProjectaleModel>(key);
-            return enemy as T;
+            BasicProjectile projectile = _pooler.Get<BasicProjectile, ProjectaleModel>(key);
+            return projectile as T;
         }
 
         private void OnPause(PauseEvent pauseEvent)
@@ -61,16 +63,13 @@ namespace GameServices
             }
         }
 
-        private void ClearPool(GameResultEvent restartEvent)
+        private void DeactivateAll(RestartEvent restartEvent)
         {
-            var temp = new List<BasicProjectile>(_projectiles);
-            foreach (var projectile in temp)
+            while (_projectiles.Count > 0)
             {
-                projectile.Deactivate();
+                _projectiles[0].Pause(true);
+                _projectiles[0].Deactivate();
             }
-            string key = GetKey(_projectileType);
-            _pooler.Clear(key);
-            _projectiles.Clear();
         }
         
         private void InitPool()
@@ -95,6 +94,7 @@ namespace GameServices
         
         private void OnGetFromPool(BasicProjectile projectile)
         {
+            projectile.Reset();
             _projectiles.Add(projectile);
         }
         
