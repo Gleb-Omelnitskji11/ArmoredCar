@@ -18,12 +18,12 @@ MonoBehaviour:
     _unitModel:
       _maxHp: 100
       _collisionDamage: 20
-      _speed: 3
+      _speed: 5
   _turretModels:
   - _turretView: {fileID: 8539962961643368377, guid: 210e6ce323668a141b4d0698cb8696c8, type: 3}
-    _fireDelay: 0.5
+    _fireDelay: 0.2
     _damageShoot: 5
-    _rotationSpeed: 60
+    _rotationSpeed: 80
     _projectileType: 0
     _turretType: 0
   _enemyModels:
@@ -33,21 +33,23 @@ MonoBehaviour:
       _collisionDamage: 30
       _speed: 0
       _type: 0
+      _points: 1
   - _enemyPrefab: {fileID: 345648326565005039, guid: c0eb7040a51fb104495683ddbdb5184f, type: 3}
     _unitModel:
       _maxHp: 20
       _collisionDamage: 20
       _speed: 2
       _type: 1
+      _points: 1
   _projectileModels:
   - _damageShoot: 15
-    _projectSpeed: 20
-    _projectLifetime: 5
+    _projectSpeed: 40
+    _projectLifetime: 3
     _projectileType: 0
     _bulletPrefab: {fileID: 4272590811791952769, guid: 61ed03b8b411ad64693436a9e6c9f064, type: 3}
   _levelModels: []
   _defaultLevelModel:
     _distance: 300
     _enemyTypes: 0000000001000000
-    _startCount: 3
-    _enemyDelay: 1.5
+    _startCount: 5
+    _enemyDelay: 0.5
