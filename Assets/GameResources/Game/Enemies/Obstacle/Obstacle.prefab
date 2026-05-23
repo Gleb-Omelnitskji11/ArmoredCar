@@ -247,6 +247,7 @@ MonoBehaviour:
     MinValue: 0.3
   - Color: {r: 0.107794166, g: 1, b: 0, a: 1}
     MinValue: 0.7
+  LookAtCamera: 0
 --- !u!114 &4439620412359655743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -515,6 +516,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 7d3fa2300f5ca1545bdc8401ba13f9f1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ee328ab74b47ee047bbea83e469b8c9e, type: 2}
     - target: {fileID: 919132149155446097, guid: 7d3fa2300f5ca1545bdc8401ba13f9f1, type: 3}
       propertyPath: m_Name
       value: GarbageContainer
@@ -522,10 +527,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d3fa2300f5ca1545bdc8401ba13f9f1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1354793259112859769}
   m_SourcePrefab: {fileID: 100100000, guid: 7d3fa2300f5ca1545bdc8401ba13f9f1, type: 3}
 --- !u!4 &5069063181680624513 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7d3fa2300f5ca1545bdc8401ba13f9f1, type: 3}
   m_PrefabInstance: {fileID: 4742949453955638378}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5553851724577741115 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d3fa2300f5ca1545bdc8401ba13f9f1, type: 3}
+  m_PrefabInstance: {fileID: 4742949453955638378}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1354793259112859769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5553851724577741115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d45a6faf1bbf43f093a7484394ae2f4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArmoredCar::GameUnits.GPUInstancingEnabler

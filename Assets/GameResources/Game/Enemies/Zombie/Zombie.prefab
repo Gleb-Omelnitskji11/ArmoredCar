@@ -577,6 +577,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3292152614215833643}
   - component: {fileID: 3296607326958773650}
+  - component: {fileID: 2510822711908948840}
   m_Layer: 0
   m_Name: stickman
   m_TagString: Untagged
@@ -624,7 +625,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2781410738928257789, guid: dcbf5bfb00d0cd64680181a573df8d61, type: 3}
+  - {fileID: 2100000, guid: 3b7300ca2babd114ab643af9dd2ebf2f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -693,6 +694,18 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.01584144, y: 0.13417289, z: 0.13808377}
     m_Extent: {x: 0.5032781, y: 0.97351825, z: 0.5458596}
   m_DirtyAABB: 0
+--- !u!114 &2510822711908948840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4261260139960686592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8245ac5cc1504ed885e67772db9acc89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ArmoredCar::GameUnits.GPUInstancingSkinEnabler
 --- !u!1 &4414735750728714675
 GameObject:
   m_ObjectHideFlags: 0
